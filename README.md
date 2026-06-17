@@ -6,13 +6,13 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 13 adds transaction editing and deletion:
+Step 14 adds finance state management:
 
-- The transaction form can add new records to the page state.
-- Existing transactions can be loaded into the form and edited.
-- Deleting a transaction requires a confirmation panel.
-- Updates are local to the transactions page until shared state management is
-  added.
+- `FinanceProvider` stores the shared finance data with `useReducer`.
+- `useFinance` gives routes access to accounts, categories, budgets, settings,
+  goals, and transactions.
+- Transaction add, update, and delete actions now update shared app state.
+- Dashboard and Transactions read from the same state source.
 
 ## Scripts
 
@@ -27,10 +27,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Array state updates should return new arrays instead of mutating old ones.
-- Editing reuses the same form by resetting it with selected record values.
-- Confirmation UI protects users before destructive actions.
-- Local page state is useful, but shared state will be needed across routes.
+- Context makes shared state available across route components.
+- Reducers centralize how state changes happen.
+- Actions describe state changes in a predictable way.
+- Derived UI, such as dashboard totals, should read from shared state.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.

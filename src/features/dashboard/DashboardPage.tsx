@@ -17,7 +17,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { getMockFinanceSnapshot } from '../../services'
+import { useFinance } from '../../hooks/useFinance'
 import {
   formatMoney,
   formatShortDate,
@@ -27,97 +27,91 @@ import {
 } from '../../utils'
 import './DashboardPage.css'
 
-const { accounts, budgets, categories, transactions } = getMockFinanceSnapshot()
-
-const categoryById = new Map(
-  categories.map((category) => [category.id, category]),
-)
-
-const totalBalance = getTotalBalance(accounts)
-const monthlyIncome = getTotalByTransactionType(transactions, 'income')
-const monthlyExpenses = getTotalByTransactionType(transactions, 'expense')
-const savingsRate = getSavingsRate(monthlyIncome, monthlyExpenses)
-
-const recentTransactions = [...transactions]
-  .sort((first, second) => second.date.localeCompare(first.date))
-  .slice(0, 4)
-
-const expenseBreakdownData = categories
-  .filter((category) => category.type === 'expense')
-  .map((category) => {
-    const value = transactions
-      .filter(
-        (transaction) =>
-          transaction.type === 'expense' && transaction.categoryId === category.id,
-      )
-      .reduce((total, transaction) => total + transaction.amount.amount, 0)
-
-    return {
-      color: category.color,
-      name: category.name,
-      value,
-    }
-  })
-  .filter((item) => item.value > 0)
-
-const cashFlowData = Array.from(
-  transactions.reduce((months, transaction) => {
-    const month = transaction.date.slice(0, 7)
-    const current = months.get(month) ?? {
-      expenses: 0,
-      income: 0,
-      month,
-    }
-
-    if (transaction.type === 'income') {
-      current.income += transaction.amount.amount
-    }
-
-    if (transaction.type === 'expense') {
-      current.expenses += transaction.amount.amount
-    }
-
-    months.set(month, current)
-
-    return months
-  }, new Map<string, { expenses: number; income: number; month: string }>()),
-)
-  .map(([, value]) => ({
-    ...value,
-    label: new Intl.DateTimeFormat('fa-IR', {
-      month: 'short',
-    }).format(new Date(`${value.month}-01`)),
-  }))
-  .sort((first, second) => first.month.localeCompare(second.month))
-
-const summaryCards = [
-  {
-    title: 'موجودی کل',
-    value: formatMoney(totalBalance),
-    helper: `${accounts.length} حساب فعال`,
-    Icon: WalletCards,
-  },
-  {
-    title: 'درآمد ماه',
-    value: formatMoney(monthlyIncome),
-    helper: 'شامل حقوق و پروژه آزاد',
-    Icon: ArrowUpRight,
-  },
-  {
-    title: 'هزینه ماه',
-    value: formatMoney(monthlyExpenses),
-    helper: 'بدون احتساب انتقال بین حساب‌ها',
-    Icon: ArrowDownRight,
-  },
-  {
-    title: 'نرخ پس‌انداز',
-    value: `${savingsRate}%`,
-    helper: 'درآمد پس از کسر هزینه‌ها',
-    Icon: BadgePercent,
-  },
-]
-
 export function DashboardPage() {
+  const { accounts, budgets, categories, transactions } = useFinance()
+  const categoryById = new Map(
+    categories.map((category) => [category.id, category]),
+  )
+  const totalBalance = getTotalBalance(accounts)
+  const monthlyIncome = getTotalByTransactionType(transactions, 'income')
+  const monthlyExpenses = getTotalByTransactionType(transactions, 'expense')
+  const savingsRate = getSavingsRate(monthlyIncome, monthlyExpenses)
+  const recentTransactions = [...transactions]
+    .sort((first, second) => second.date.localeCompare(first.date))
+    .slice(0, 4)
+  const expenseBreakdownData = categories
+    .filter((category) => category.type === 'expense')
+    .map((category) => {
+      const value = transactions
+        .filter(
+          (transaction) =>
+            transaction.type === 'expense' && transaction.categoryId === category.id,
+        )
+        .reduce((total, transaction) => total + transaction.amount.amount, 0)
+
+      return {
+        color: category.color,
+        name: category.name,
+        value,
+      }
+    })
+    .filter((item) => item.value > 0)
+  const cashFlowData = Array.from(
+    transactions.reduce((months, transaction) => {
+      const month = transaction.date.slice(0, 7)
+      const current = months.get(month) ?? {
+        expenses: 0,
+        income: 0,
+        month,
+      }
+
+      if (transaction.type === 'income') {
+        current.income += transaction.amount.amount
+      }
+
+      if (transaction.type === 'expense') {
+        current.expenses += transaction.amount.amount
+      }
+
+      months.set(month, current)
+
+      return months
+    }, new Map<string, { expenses: number; income: number; month: string }>()),
+  )
+    .map(([, value]) => ({
+      ...value,
+      label: new Intl.DateTimeFormat('fa-IR', {
+        month: 'short',
+      }).format(new Date(`${value.month}-01`)),
+    }))
+    .sort((first, second) => first.month.localeCompare(second.month))
+  const summaryCards = [
+    {
+      title: 'موجودی کل',
+      value: formatMoney(totalBalance),
+      helper: `${accounts.length} حساب فعال`,
+      Icon: WalletCards,
+    },
+    {
+      title: 'درآمد ماه',
+      value: formatMoney(monthlyIncome),
+      helper: 'شامل حقوق و پروژه آزاد',
+      Icon: ArrowUpRight,
+    },
+    {
+      title: 'هزینه ماه',
+      value: formatMoney(monthlyExpenses),
+      helper: 'بدون احتساب انتقال بین حساب‌ها',
+      Icon: ArrowDownRight,
+    },
+    {
+      title: 'نرخ پس‌انداز',
+      value: `${savingsRate}%`,
+      helper: 'درآمد پس از کسر هزینه‌ها',
+      Icon: BadgePercent,
+    },
+  ]
+
   return (
     <div className="dashboard-page">
       <section className="dashboard-hero" aria-labelledby="dashboard-title">

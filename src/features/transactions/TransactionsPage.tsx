@@ -3,7 +3,7 @@ import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
-import { getMockFinanceSnapshot } from '../../services'
+import { useFinance } from '../../hooks/useFinance'
 import type { Transaction, TransactionType } from '../../types'
 import { formatMoney, formatShortDate } from '../../utils'
 import './TransactionsPage.css'
@@ -11,13 +11,6 @@ import './TransactionsPage.css'
 type TypeFilter = TransactionType | 'all'
 
 type SortOption = 'date-desc' | 'date-asc' | 'amount-desc' | 'amount-asc'
-
-const { accounts, categories, transactions } = getMockFinanceSnapshot()
-
-const accountById = new Map(accounts.map((account) => [account.id, account]))
-const categoryById = new Map(
-  categories.map((category) => [category.id, category]),
-)
 
 const transactionTypeLabels: Record<TransactionType, string> = {
   expense: 'هزینه',
@@ -70,10 +63,17 @@ type TransactionFormInput = z.input<typeof transactionFormSchema>
 type TransactionFormValues = z.output<typeof transactionFormSchema>
 
 export function TransactionsPage() {
+  const {
+    accounts,
+    addTransaction,
+    categories,
+    deleteTransaction,
+    transactions,
+    updateTransaction,
+  } = useFinance()
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [sortOption, setSortOption] = useState<SortOption>('date-desc')
-  const [transactionRecords, setTransactionRecords] = useState(transactions)
   const [editingTransactionId, setEditingTransactionId] = useState<string | null>(
     null,
   )
@@ -102,11 +102,19 @@ export function TransactionsPage() {
     control,
     name: 'type',
   }) as TransactionType
+  const accountById = useMemo(
+    () => new Map(accounts.map((account) => [account.id, account])),
+    [accounts],
+  )
+  const categoryById = useMemo(
+    () => new Map(categories.map((category) => [category.id, category])),
+    [categories],
+  )
 
   const filteredTransactions = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase()
 
-    return [...transactionRecords]
+    return [...transactions]
       .filter((transaction) => {
         const category = categoryById.get(transaction.categoryId)
         const account = accountById.get(transaction.accountId)
@@ -143,7 +151,7 @@ export function TransactionsPage() {
 
         return first.amount.amount - second.amount.amount
       })
-  }, [searchQuery, sortOption, transactionRecords, typeFilter])
+  }, [accountById, categoryById, searchQuery, sortOption, transactions, typeFilter])
 
   const formCategoryOptions = categories.filter((category) => {
     if (selectedTransactionType === 'transfer') {
@@ -185,18 +193,11 @@ export function TransactionsPage() {
     }
 
     if (editingTransactionId) {
-      setTransactionRecords((currentTransactions) =>
-        currentTransactions.map((transaction) =>
-          transaction.id === editingTransactionId ? transactionPayload : transaction,
-        ),
-      )
+      updateTransaction(transactionPayload)
       setStatusMessage('تراکنش با موفقیت ویرایش شد.')
       setEditingTransactionId(null)
     } else {
-      setTransactionRecords((currentTransactions) => [
-        transactionPayload,
-        ...currentTransactions,
-      ])
+      addTransaction(transactionPayload)
       setStatusMessage('تراکنش جدید به لیست اضافه شد.')
     }
 
@@ -228,9 +229,7 @@ export function TransactionsPage() {
       return
     }
 
-    setTransactionRecords((currentTransactions) =>
-      currentTransactions.filter((transaction) => transaction.id !== pendingDeleteId),
-    )
+    deleteTransaction(pendingDeleteId)
     setStatusMessage('تراکنش حذف شد.')
     setPendingDeleteId(null)
 
@@ -239,7 +238,7 @@ export function TransactionsPage() {
     }
   }
 
-  const pendingDeleteTransaction = transactionRecords.find(
+  const pendingDeleteTransaction = transactions.find(
     (transaction) => transaction.id === pendingDeleteId,
   )
   const isEditing = editingTransactionId !== null
@@ -255,7 +254,7 @@ export function TransactionsPage() {
           </p>
         </div>
         <span className="transactions-count">
-          {filteredTransactions.length} از {transactionRecords.length} تراکنش
+          {filteredTransactions.length} از {transactions.length} تراکنش
         </span>
       </section>
 
