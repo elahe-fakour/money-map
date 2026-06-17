@@ -3,9 +3,9 @@ import { PagePlaceholder } from '../shared/PagePlaceholder'
 export function AccountsPage() {
   return (
     <PagePlaceholder
-      title="Accounts"
-      eyebrow="Manage balances"
-      description="View cash, checking, credit card, and savings account balances in one place."
+      title="حساب‌ها"
+      eyebrow="مدیریت موجودی‌ها"
+      description="موجودی نقدی، کارت بانکی، کارت اعتباری و حساب پس‌انداز را در یک صفحه ببین."
     />
   )
 }

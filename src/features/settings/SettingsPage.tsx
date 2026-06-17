@@ -3,9 +3,9 @@ import { PagePlaceholder } from '../shared/PagePlaceholder'
 export function SettingsPage() {
   return (
     <PagePlaceholder
-      title="Settings"
-      eyebrow="Personalize MoneyMap"
-      description="Prepare app preferences such as currency, theme, and future import or export options."
+      title="تنظیمات"
+      eyebrow="شخصی‌سازی مانی‌مپ"
+      description="تنظیمات برنامه مثل واحد پول، زبان، ظاهر و گزینه‌های آینده برای ورود یا خروجی گرفتن داده را آماده کن."
     />
   )
 }

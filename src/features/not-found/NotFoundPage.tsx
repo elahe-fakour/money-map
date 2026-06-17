@@ -4,12 +4,12 @@ export function NotFoundPage() {
   return (
     <section className="intro-panel" aria-labelledby="page-title">
       <p className="eyebrow">404</p>
-      <h1 id="page-title">Page not found</h1>
+      <h1 id="page-title">صفحه پیدا نشد</h1>
       <p className="intro-copy">
-        This route does not exist yet. Go back to the dashboard to continue.
+        این مسیر هنوز وجود ندارد. برای ادامه به داشبورد برگرد.
       </p>
       <Link className="text-link" to="/">
-        Back to dashboard
+        بازگشت به داشبورد
       </Link>
     </section>
   )

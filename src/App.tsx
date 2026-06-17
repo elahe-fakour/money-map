@@ -2,19 +2,19 @@ import { NavLink, Outlet } from 'react-router-dom'
 import './App.css'
 
 const navigationItems = [
-  { to: '/', label: 'Dashboard', end: true },
-  { to: '/transactions', label: 'Transactions' },
-  { to: '/budgets', label: 'Budgets' },
-  { to: '/accounts', label: 'Accounts' },
-  { to: '/reports', label: 'Reports' },
-  { to: '/goals', label: 'Goals' },
-  { to: '/settings', label: 'Settings' },
+  { to: '/', label: 'داشبورد', end: true },
+  { to: '/transactions', label: 'تراکنش‌ها' },
+  { to: '/budgets', label: 'بودجه‌ها' },
+  { to: '/accounts', label: 'حساب‌ها' },
+  { to: '/reports', label: 'گزارش‌ها' },
+  { to: '/goals', label: 'اهداف' },
+  { to: '/settings', label: 'تنظیمات' },
 ]
 
 function App() {
   return (
     <main className="app-shell">
-      <nav className="top-nav" aria-label="Primary navigation">
+      <nav className="top-nav" aria-label="ناوبری اصلی">
         {navigationItems.map((item) => (
           <NavLink
             className={({ isActive }) =>
@@ -30,10 +30,10 @@ function App() {
       </nav>
 
       <section className="status-panel" aria-labelledby="status-title">
-        <h2 id="status-title">Project infrastructure is ready</h2>
+        <h2 id="status-title">مسیریابی پروژه آماده است</h2>
         <p>
-          Routing is configured with React Router. Use the navigation to move
-          between the first MoneyMap pages.
+          مسیریابی با React Router تنظیم شده است. از منوی بالا می‌توانی بین
+          صفحه‌های اولیه مانی‌مپ جابه‌جا شوی.
         </p>
       </section>
 
