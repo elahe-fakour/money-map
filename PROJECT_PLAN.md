@@ -1,9 +1,10 @@
 # MoneyMap Product Plan
 
 MoneyMap is a responsive personal finance management web app for people who
-want a clear monthly view of their money. The product should feel like a small
-but realistic SaaS dashboard, with enough polish and structure to demonstrate
-professional React frontend skills.
+want a clear monthly view of their money. The app should support both Persian
+and English users, including right-to-left and left-to-right layouts. The
+product should feel like a small but realistic SaaS dashboard, with enough
+polish and structure to demonstrate professional React frontend skills.
 
 ## Product Goal
 
@@ -18,6 +19,7 @@ The app should make common personal finance tasks easy:
 - Monitor account balances.
 - Compare budgets with actual spending.
 - Review simple monthly reports.
+- Switch between Persian and English.
 
 ## Primary User
 
@@ -30,6 +32,7 @@ They need:
 - Simple transaction entry and filtering.
 - Clear visual feedback for budgets and spending patterns.
 - A responsive interface that works well on desktop and mobile.
+- A language experience that feels natural in both Persian and English.
 
 ## MVP Features
 
@@ -42,6 +45,7 @@ The MVP should focus on the core experience before advanced tooling.
 - Accounts overview with account balances.
 - Basic reports for monthly income, expenses, and category breakdown.
 - Responsive layout with desktop navigation and mobile-friendly navigation.
+- Persian and English UI text with correct text direction.
 - Basic tests for important UI flows.
 - README documentation for setup, scripts, and project structure.
 
@@ -55,6 +59,7 @@ These features can be added after the MVP is stable:
 - Storybook stories for reusable UI components.
 - Performance optimization and Lighthouse checks.
 - Dark mode and currency settings.
+- More advanced localization, including locale-aware date and currency formats.
 - Mock API layer with MSW or another local mock service.
 
 ## Frontend Skills Covered
@@ -71,6 +76,7 @@ descriptions.
 | Forms and validation | Add/edit transactions, budgets, accounts, savings goals |
 | Data visualization | Cash flow and category breakdown charts |
 | Responsive UI | Desktop sidebar, mobile navigation, adaptive tables/cards |
+| Internationalization | Persian and English text, RTL/LTR layout, locale settings |
 | Accessibility | Semantic HTML, labels, focus states, validation messages |
 | Testing | Rendering states, user flows, form behavior, filtering |
 | Documentation | README, roadmap, product plan, learning notes |

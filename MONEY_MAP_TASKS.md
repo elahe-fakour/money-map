@@ -37,6 +37,7 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Set up global CSS variables.
 - Add base typography, color, spacing, and responsive rules.
 - Prepare light and dark theme foundations.
+- Keep styles ready for both left-to-right and right-to-left layouts.
 - Suggested commit: `style: add global design tokens`
 
 ## 6. Routing Setup
@@ -52,6 +53,7 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Build mobile navigation.
 - Add top bar and main content layout.
 - Make the shell responsive across mobile, tablet, and desktop.
+- Make the layout work for both English and Persian text direction.
 - Suggested commit: `feat: build responsive app layout`
 
 ## 8. Mock Data Layer
@@ -143,6 +145,7 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add unit and integration tests with React Testing Library.
 - Add end-to-end tests with Playwright.
 - Add Storybook stories for reusable components.
+- Add basic tests for language and direction switching.
 - Suggested commit: `test: add tests and component stories`
 
 ## 20. Performance, Documentation, And Deployment

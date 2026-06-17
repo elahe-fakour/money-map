@@ -19,6 +19,10 @@ export type BudgetStatus = 'on-track' | 'near-limit' | 'over-budget'
 
 export type ThemeMode = 'light' | 'dark' | 'system'
 
+export type AppLocale = 'en' | 'fa'
+
+export type TextDirection = 'ltr' | 'rtl'
+
 export type Account = {
   id: ID
   name: string
@@ -74,6 +78,8 @@ export type SavingsGoal = {
 
 export type AppSettings = {
   currency: CurrencyCode
+  locale: AppLocale
+  direction: TextDirection
   themeMode: ThemeMode
 }
 

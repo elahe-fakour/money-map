@@ -1,6 +1,7 @@
 export type {
   Account,
   AccountType,
+  AppLocale,
   AppSettings,
   Budget,
   BudgetStatus,
@@ -12,6 +13,7 @@ export type {
   MoneyAmount,
   MonthlyReport,
   SavingsGoal,
+  TextDirection,
   ThemeMode,
   Transaction,
   TransactionType,
