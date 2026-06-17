@@ -6,12 +6,14 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 11 builds the transactions list:
+Step 12 adds the validated transaction form:
 
-- The transactions page now uses mock finance data.
-- Users can search by note, category, account, or transaction type.
-- Transactions can be filtered by type and sorted by date or amount.
-- The list adapts from a desktop table layout to mobile-friendly cards.
+- `react-hook-form` manages transaction form state.
+- `zod` defines validation rules for amount, date, category, account, and
+  transfer destination.
+- Form errors are shown next to the related field.
+- The submit flow validates a transaction preview before future state
+  management connects it to the list.
 
 ## Scripts
 
@@ -26,10 +28,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Controlled inputs store UI state with `useState`.
-- `useMemo` keeps derived filtered lists predictable.
-- Filtering and sorting are client-side data transformations.
-- Empty states explain what happened when filters return no results.
+- Form libraries reduce repetitive input state code.
+- Schema validation keeps form rules explicit and reusable.
+- Conditional fields, such as transfer destination, need conditional validation.
+- UI can validate data now and persist it later when state management is ready.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.

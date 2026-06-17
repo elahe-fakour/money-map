@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Search } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import { z } from 'zod'
 import { getMockFinanceSnapshot } from '../../services'
 import type { TransactionType } from '../../types'
 import { formatMoney, formatShortDate } from '../../utils'
@@ -29,10 +32,72 @@ const typeFilterOptions: { label: string; value: TypeFilter }[] = [
   { label: 'انتقال', value: 'transfer' },
 ]
 
+const transactionFormSchema = z
+  .object({
+    accountId: z.string().min(1, 'حساب را انتخاب کن.'),
+    amount: z.coerce
+      .number('مبلغ باید عدد باشد.')
+      .positive('مبلغ باید بزرگ‌تر از صفر باشد.'),
+    categoryId: z.string().min(1, 'دسته‌بندی را انتخاب کن.'),
+    date: z.string().min(1, 'تاریخ را وارد کن.'),
+    note: z.string().max(80, 'یادداشت باید کمتر از ۸۰ کاراکتر باشد.').optional(),
+    transferAccountId: z.string().optional(),
+    type: z.enum(['income', 'expense', 'transfer']),
+  })
+  .superRefine((values, context) => {
+    if (values.type !== 'transfer') {
+      return
+    }
+
+    if (!values.transferAccountId) {
+      context.addIssue({
+        code: 'custom',
+        message: 'برای انتقال، حساب مقصد را انتخاب کن.',
+        path: ['transferAccountId'],
+      })
+    }
+
+    if (values.accountId === values.transferAccountId) {
+      context.addIssue({
+        code: 'custom',
+        message: 'حساب مبدا و مقصد نباید یکسان باشند.',
+        path: ['transferAccountId'],
+      })
+    }
+  })
+
+type TransactionFormInput = z.input<typeof transactionFormSchema>
+type TransactionFormValues = z.output<typeof transactionFormSchema>
+
 export function TransactionsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [sortOption, setSortOption] = useState<SortOption>('date-desc')
+  const [lastSubmittedTransaction, setLastSubmittedTransaction] =
+    useState<TransactionFormValues | null>(null)
+  const {
+    control,
+    formState: { errors, isSubmitSuccessful },
+    handleSubmit,
+    register,
+    reset,
+  } = useForm<TransactionFormInput, unknown, TransactionFormValues>({
+    defaultValues: {
+      accountId: accounts[0]?.id ?? '',
+      amount: 0,
+      categoryId: categories[0]?.id ?? '',
+      date: '2026-06-17',
+      note: '',
+      transferAccountId: '',
+      type: 'expense',
+    },
+    mode: 'onBlur',
+    resolver: zodResolver(transactionFormSchema),
+  })
+  const selectedTransactionType = useWatch({
+    control,
+    name: 'type',
+  }) as TransactionType
 
   const filteredTransactions = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase()
@@ -75,6 +140,27 @@ export function TransactionsPage() {
         return first.amount.amount - second.amount.amount
       })
   }, [searchQuery, sortOption, typeFilter])
+
+  const formCategoryOptions = categories.filter((category) => {
+    if (selectedTransactionType === 'transfer') {
+      return true
+    }
+
+    return category.type === selectedTransactionType
+  })
+
+  const onSubmit = (values: TransactionFormValues) => {
+    setLastSubmittedTransaction(values)
+    reset({
+      accountId: values.accountId,
+      amount: 0,
+      categoryId: formCategoryOptions[0]?.id ?? '',
+      date: values.date,
+      note: '',
+      transferAccountId: '',
+      type: values.type,
+    })
+  }
 
   return (
     <div className="transactions-page">
@@ -132,6 +218,126 @@ export function TransactionsPage() {
             <option value="amount-asc">کمترین مبلغ</option>
           </select>
         </label>
+      </section>
+
+      <section className="transaction-form-panel" aria-labelledby="transaction-form-title">
+        <div className="form-heading">
+          <div>
+            <p className="eyebrow">تراکنش جدید</p>
+            <h2 id="transaction-form-title">افزودن تراکنش</h2>
+          </div>
+          <p>
+            این فرم فعلاً داده را ذخیره دائمی نمی‌کند؛ در قدم state management
+            آن را به لیست وصل می‌کنیم.
+          </p>
+        </div>
+
+        <form className="transaction-form" onSubmit={handleSubmit(onSubmit)}>
+          <label className="form-field">
+            <span>نوع تراکنش</span>
+            <select {...register('type')}>
+              <option value="expense">هزینه</option>
+              <option value="income">درآمد</option>
+              <option value="transfer">انتقال</option>
+            </select>
+          </label>
+
+          <label className="form-field">
+            <span>مبلغ</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              min="0"
+              step="100000"
+              {...register('amount')}
+            />
+            {errors.amount ? (
+              <small className="field-error">{errors.amount.message}</small>
+            ) : null}
+          </label>
+
+          <label className="form-field">
+            <span>تاریخ</span>
+            <input type="date" {...register('date')} />
+            {errors.date ? (
+              <small className="field-error">{errors.date.message}</small>
+            ) : null}
+          </label>
+
+          <label className="form-field">
+            <span>دسته‌بندی</span>
+            <select {...register('categoryId')}>
+              {formCategoryOptions.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            {errors.categoryId ? (
+              <small className="field-error">{errors.categoryId.message}</small>
+            ) : null}
+          </label>
+
+          <label className="form-field">
+            <span>حساب</span>
+            <select {...register('accountId')}>
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {account.name}
+                </option>
+              ))}
+            </select>
+            {errors.accountId ? (
+              <small className="field-error">{errors.accountId.message}</small>
+            ) : null}
+          </label>
+
+          {selectedTransactionType === 'transfer' ? (
+            <label className="form-field">
+              <span>حساب مقصد</span>
+              <select {...register('transferAccountId')}>
+                <option value="">انتخاب حساب مقصد</option>
+                {accounts.map((account) => (
+                  <option key={account.id} value={account.id}>
+                    {account.name}
+                  </option>
+                ))}
+              </select>
+              {errors.transferAccountId ? (
+                <small className="field-error">
+                  {errors.transferAccountId.message}
+                </small>
+              ) : null}
+            </label>
+          ) : null}
+
+          <label className="form-field form-field-wide">
+            <span>یادداشت</span>
+            <input
+              type="text"
+              placeholder="مثلاً خرید هفتگی یا حقوق ماهانه"
+              {...register('note')}
+            />
+            {errors.note ? (
+              <small className="field-error">{errors.note.message}</small>
+            ) : null}
+          </label>
+
+          <div className="form-actions">
+            <button type="submit">ثبت تراکنش</button>
+          </div>
+        </form>
+
+        {isSubmitSuccessful && lastSubmittedTransaction ? (
+          <div className="form-success" role="status">
+            تراکنش معتبر است: {formatMoney({
+              amount: lastSubmittedTransaction.amount,
+              currency: 'IRR',
+            })}{' '}
+            برای {transactionTypeLabels[lastSubmittedTransaction.type]} آماده ثبت
+            شد.
+          </div>
+        ) : null}
       </section>
 
       <section className="transactions-panel" aria-label="لیست تراکنش‌ها">
