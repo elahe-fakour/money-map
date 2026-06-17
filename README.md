@@ -6,12 +6,13 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 1 sets up the project infrastructure:
+Step 2 defines the product plan and project scope:
 
-- React + TypeScript + Vite
-- ESLint
-- Basic app entry point
-- Clean starter screen for MoneyMap
+- Product goal
+- Primary user
+- MVP features
+- Future features
+- Frontend skills covered by the project
 
 ## Scripts
 
@@ -26,9 +27,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- `package.json` defines project metadata, dependencies, and commands.
-- `src/main.tsx` mounts the React app into the DOM.
-- `src/App.tsx` is the first visible React component.
-- Vite provides the development server and production build.
+- Product scope keeps the project focused.
+- MVP features are the first useful version, not the final dream version.
+- Future features are intentionally delayed so the core app can become stable.
+- Skill mapping helps this portfolio project match React job expectations.
 
-See `MONEY_MAP_TASKS.md` for the full roadmap.
+See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
+full roadmap.
