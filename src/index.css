@@ -1,0 +1,67 @@
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --text: #111827;
+  --text-muted: #5f6878;
+  --border: #d9deea;
+  --accent: #0f766e;
+  --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111827;
+    --surface: #182235;
+    --text: #f8fafc;
+    --text-muted: #b8c0cc;
+    --border: #2f3b52;
+    --accent: #5eead4;
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  }
+}
+
+#root {
+  min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  margin: 0 0 16px;
+  color: var(--text);
+  font-size: 5rem;
+  line-height: 1;
+}
+
+h2 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 1.375rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+}

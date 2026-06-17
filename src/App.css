@@ -1,0 +1,64 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 48px 0;
+}
+
+.intro-panel,
+.status-panel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.intro-panel {
+  padding: 48px;
+}
+
+.status-panel {
+  padding: 32px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: var(--accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro-copy {
+  max-width: 640px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 1.125rem;
+}
+
+.status-panel p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 24px, 920px);
+    padding: 24px 0;
+  }
+
+  .intro-panel,
+  .status-panel {
+    padding: 24px;
+  }
+
+  .intro-copy {
+    font-size: 1rem;
+  }
+}
