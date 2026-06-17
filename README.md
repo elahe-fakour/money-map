@@ -6,12 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 10 adds dashboard charts:
+Step 11 builds the transactions list:
 
-- Recharts powers responsive dashboard visualizations.
-- Expense breakdown is grouped by category.
-- Monthly cash flow compares income and expenses across recent months.
-- Chart labels and tooltips use Persian-friendly formatting.
+- The transactions page now uses mock finance data.
+- Users can search by note, category, account, or transaction type.
+- Transactions can be filtered by type and sorted by date or amount.
+- The list adapts from a desktop table layout to mobile-friendly cards.
 
 ## Scripts
 
@@ -26,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Charts usually need derived data, not raw API objects.
-- Responsive containers let charts adapt to dashboard layouts.
-- Tooltips and legends make visual data easier to understand.
-- Accessible labels help charts communicate their purpose beyond visuals.
+- Controlled inputs store UI state with `useState`.
+- `useMemo` keeps derived filtered lists predictable.
+- Filtering and sorting are client-side data transformations.
+- Empty states explain what happened when filters return no results.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
