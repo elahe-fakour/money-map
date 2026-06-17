@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { getMockFinanceSnapshot } from '../../services'
-import type { TransactionType } from '../../types'
+import type { Transaction, TransactionType } from '../../types'
 import { formatMoney, formatShortDate } from '../../utils'
 import './TransactionsPage.css'
 
@@ -73,8 +73,12 @@ export function TransactionsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all')
   const [sortOption, setSortOption] = useState<SortOption>('date-desc')
-  const [lastSubmittedTransaction, setLastSubmittedTransaction] =
-    useState<TransactionFormValues | null>(null)
+  const [transactionRecords, setTransactionRecords] = useState(transactions)
+  const [editingTransactionId, setEditingTransactionId] = useState<string | null>(
+    null,
+  )
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
+  const [statusMessage, setStatusMessage] = useState('')
   const {
     control,
     formState: { errors, isSubmitSuccessful },
@@ -102,7 +106,7 @@ export function TransactionsPage() {
   const filteredTransactions = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase()
 
-    return [...transactions]
+    return [...transactionRecords]
       .filter((transaction) => {
         const category = categoryById.get(transaction.categoryId)
         const account = accountById.get(transaction.accountId)
@@ -139,7 +143,7 @@ export function TransactionsPage() {
 
         return first.amount.amount - second.amount.amount
       })
-  }, [searchQuery, sortOption, typeFilter])
+  }, [searchQuery, sortOption, transactionRecords, typeFilter])
 
   const formCategoryOptions = categories.filter((category) => {
     if (selectedTransactionType === 'transfer') {
@@ -149,18 +153,96 @@ export function TransactionsPage() {
     return category.type === selectedTransactionType
   })
 
-  const onSubmit = (values: TransactionFormValues) => {
-    setLastSubmittedTransaction(values)
+  const resetForm = (values?: Partial<TransactionFormInput>) => {
     reset({
-      accountId: values.accountId,
+      accountId: values?.accountId ?? accounts[0]?.id ?? '',
       amount: 0,
-      categoryId: formCategoryOptions[0]?.id ?? '',
-      date: values.date,
+      categoryId: values?.categoryId ?? formCategoryOptions[0]?.id ?? '',
+      date: values?.date ?? '2026-06-17',
       note: '',
       transferAccountId: '',
-      type: values.type,
+      type: values?.type ?? 'expense',
     })
   }
+
+  const onSubmit = (values: TransactionFormValues) => {
+    const now = new Date().toISOString()
+    const transactionPayload: Transaction = {
+      accountId: values.accountId,
+      amount: {
+        amount: values.amount,
+        currency: 'IRR',
+      },
+      categoryId: values.categoryId,
+      createdAt: now,
+      date: values.date,
+      id: editingTransactionId ?? `transaction-${crypto.randomUUID()}`,
+      note: values.note?.trim() || undefined,
+      transferAccountId:
+        values.type === 'transfer' ? values.transferAccountId : undefined,
+      type: values.type,
+      updatedAt: now,
+    }
+
+    if (editingTransactionId) {
+      setTransactionRecords((currentTransactions) =>
+        currentTransactions.map((transaction) =>
+          transaction.id === editingTransactionId ? transactionPayload : transaction,
+        ),
+      )
+      setStatusMessage('تراکنش با موفقیت ویرایش شد.')
+      setEditingTransactionId(null)
+    } else {
+      setTransactionRecords((currentTransactions) => [
+        transactionPayload,
+        ...currentTransactions,
+      ])
+      setStatusMessage('تراکنش جدید به لیست اضافه شد.')
+    }
+
+    resetForm({ accountId: values.accountId, date: values.date, type: values.type })
+  }
+
+  const startEditingTransaction = (transaction: Transaction) => {
+    setEditingTransactionId(transaction.id)
+    setStatusMessage('')
+    reset({
+      accountId: transaction.accountId,
+      amount: transaction.amount.amount,
+      categoryId: transaction.categoryId,
+      date: transaction.date,
+      note: transaction.note ?? '',
+      transferAccountId: transaction.transferAccountId ?? '',
+      type: transaction.type,
+    })
+  }
+
+  const cancelEditing = () => {
+    setEditingTransactionId(null)
+    setStatusMessage('')
+    resetForm()
+  }
+
+  const confirmDeleteTransaction = () => {
+    if (!pendingDeleteId) {
+      return
+    }
+
+    setTransactionRecords((currentTransactions) =>
+      currentTransactions.filter((transaction) => transaction.id !== pendingDeleteId),
+    )
+    setStatusMessage('تراکنش حذف شد.')
+    setPendingDeleteId(null)
+
+    if (editingTransactionId === pendingDeleteId) {
+      cancelEditing()
+    }
+  }
+
+  const pendingDeleteTransaction = transactionRecords.find(
+    (transaction) => transaction.id === pendingDeleteId,
+  )
+  const isEditing = editingTransactionId !== null
 
   return (
     <div className="transactions-page">
@@ -173,7 +255,7 @@ export function TransactionsPage() {
           </p>
         </div>
         <span className="transactions-count">
-          {filteredTransactions.length} تراکنش
+          {filteredTransactions.length} از {transactionRecords.length} تراکنش
         </span>
       </section>
 
@@ -223,12 +305,16 @@ export function TransactionsPage() {
       <section className="transaction-form-panel" aria-labelledby="transaction-form-title">
         <div className="form-heading">
           <div>
-            <p className="eyebrow">تراکنش جدید</p>
-            <h2 id="transaction-form-title">افزودن تراکنش</h2>
+            <p className="eyebrow">
+              {isEditing ? 'ویرایش تراکنش' : 'تراکنش جدید'}
+            </p>
+            <h2 id="transaction-form-title">
+              {isEditing ? 'ویرایش تراکنش' : 'افزودن تراکنش'}
+            </h2>
           </div>
           <p>
-            این فرم فعلاً داده را ذخیره دائمی نمی‌کند؛ در قدم state management
-            آن را به لیست وصل می‌کنیم.
+            تغییرات این صفحه فعلاً در state محلی همین صفحه ذخیره می‌شود؛ در قدم
+            state management آن را سراسری می‌کنیم.
           </p>
         </div>
 
@@ -324,21 +410,48 @@ export function TransactionsPage() {
           </label>
 
           <div className="form-actions">
-            <button type="submit">ثبت تراکنش</button>
+            {isEditing ? (
+              <button className="secondary-button" type="button" onClick={cancelEditing}>
+                انصراف
+              </button>
+            ) : null}
+            <button type="submit">
+              {isEditing ? 'ذخیره ویرایش' : 'ثبت تراکنش'}
+            </button>
           </div>
         </form>
 
-        {isSubmitSuccessful && lastSubmittedTransaction ? (
+        {isSubmitSuccessful && statusMessage ? (
           <div className="form-success" role="status">
-            تراکنش معتبر است: {formatMoney({
-              amount: lastSubmittedTransaction.amount,
-              currency: 'IRR',
-            })}{' '}
-            برای {transactionTypeLabels[lastSubmittedTransaction.type]} آماده ثبت
-            شد.
+            {statusMessage}
           </div>
         ) : null}
       </section>
+
+      {pendingDeleteTransaction ? (
+        <section className="delete-confirm-panel" aria-labelledby="delete-title">
+          <div>
+            <p className="eyebrow">تأیید حذف</p>
+            <h2 id="delete-title">این تراکنش حذف شود؟</h2>
+            <p>
+              {pendingDeleteTransaction.note ?? 'تراکنش انتخاب‌شده'} برای همیشه
+              از لیست فعلی حذف می‌شود.
+            </p>
+          </div>
+          <div className="delete-actions">
+            <button type="button" onClick={() => setPendingDeleteId(null)}>
+              انصراف
+            </button>
+            <button
+              className="danger-button"
+              type="button"
+              onClick={confirmDeleteTransaction}
+            >
+              حذف تراکنش
+            </button>
+          </div>
+        </section>
+      ) : null}
 
       <section className="transactions-panel" aria-label="لیست تراکنش‌ها">
         {filteredTransactions.length === 0 ? (
@@ -391,6 +504,21 @@ export function TransactionsPage() {
                     {isExpense ? '-' : '+'}
                     {formatMoney(transaction.amount)}
                   </strong>
+                  <div className="transaction-actions">
+                    <button
+                      type="button"
+                      onClick={() => startEditingTransaction(transaction)}
+                    >
+                      ویرایش
+                    </button>
+                    <button
+                      className="danger-text-button"
+                      type="button"
+                      onClick={() => setPendingDeleteId(transaction.id)}
+                    >
+                      حذف
+                    </button>
+                  </div>
                 </article>
               )
             })}

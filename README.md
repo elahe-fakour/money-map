@@ -6,14 +6,13 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 12 adds the validated transaction form:
+Step 13 adds transaction editing and deletion:
 
-- `react-hook-form` manages transaction form state.
-- `zod` defines validation rules for amount, date, category, account, and
-  transfer destination.
-- Form errors are shown next to the related field.
-- The submit flow validates a transaction preview before future state
-  management connects it to the list.
+- The transaction form can add new records to the page state.
+- Existing transactions can be loaded into the form and edited.
+- Deleting a transaction requires a confirmation panel.
+- Updates are local to the transactions page until shared state management is
+  added.
 
 ## Scripts
 
@@ -28,10 +27,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Form libraries reduce repetitive input state code.
-- Schema validation keeps form rules explicit and reusable.
-- Conditional fields, such as transfer destination, need conditional validation.
-- UI can validate data now and persist it later when state management is ready.
+- Array state updates should return new arrays instead of mutating old ones.
+- Editing reuses the same form by resetting it with selected record values.
+- Confirmation UI protects users before destructive actions.
+- Local page state is useful, but shared state will be needed across routes.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.

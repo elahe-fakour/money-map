@@ -6,6 +6,7 @@
 .transactions-hero,
 .transactions-toolbar,
 .transaction-form-panel,
+.delete-confirm-panel,
 .transactions-panel {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -173,6 +174,7 @@
 .form-actions {
   display: flex;
   align-items: end;
+  gap: var(--space-2);
 }
 
 .form-actions button {
@@ -186,6 +188,13 @@
   font-weight: 900;
 }
 
+.form-actions .secondary-button,
+.delete-actions button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-muted);
+  color: var(--color-text);
+}
+
 .form-success {
   padding: var(--space-3);
   border: 1px solid color-mix(in srgb, var(--color-success) 45%, transparent);
@@ -193,6 +202,44 @@
   background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
   color: var(--color-success);
   font-weight: 800;
+}
+
+.delete-confirm-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-color: color-mix(in srgb, var(--color-danger) 45%, var(--color-border));
+}
+
+.delete-confirm-panel h2 {
+  margin: 0 0 var(--space-2);
+}
+
+.delete-confirm-panel p:last-child {
+  color: var(--color-text-muted);
+}
+
+.delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.delete-actions button,
+.transaction-actions button {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.delete-actions .danger-button {
+  border: 0;
+  background: var(--color-danger);
+  color: var(--color-surface);
 }
 
 .transactions-panel {
@@ -207,7 +254,9 @@
 .transactions-header,
 .transaction-card {
   display: grid;
-  grid-template-columns: minmax(220px, 1.4fr) 110px 120px 96px minmax(140px, auto);
+  grid-template-columns:
+    minmax(220px, 1.4fr) 104px 110px 88px minmax(130px, auto)
+    132px;
   gap: var(--space-3);
   align-items: center;
 }
@@ -295,6 +344,22 @@
   color: var(--color-danger);
 }
 
+.transaction-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.transaction-actions button {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.transaction-actions .danger-text-button {
+  color: var(--color-danger);
+}
+
 .transactions-empty {
   display: grid;
   place-items: center;
@@ -339,6 +404,11 @@
     flex-direction: column;
   }
 
+  .delete-confirm-panel {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
   .transaction-form {
     grid-template-columns: 1fr;
   }
@@ -358,6 +428,10 @@
 
   .transaction-list-amount {
     text-align: start;
+  }
+
+  .transaction-actions {
+    justify-content: flex-start;
   }
 
   .filter-group {
