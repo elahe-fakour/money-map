@@ -6,12 +6,13 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 8 adds the mock finance data layer:
+Step 9 builds the dashboard summary:
 
-- `src/data` contains realistic Persian mock finance data.
-- `src/utils` contains reusable finance calculation helpers.
-- `src/services` exposes a mock finance snapshot for future UI screens.
-- Mock data follows the shared TypeScript models in `src/types`.
+- Dashboard cards show total balance, monthly income, monthly expenses, and
+  savings rate.
+- Recent transactions use the mock data service.
+- Budget progress previews show spent amount, limit, and status color.
+- Currency and dates are formatted for the Persian locale.
 
 ## Scripts
 
@@ -26,10 +27,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Mock data lets us build UI before a real backend exists.
-- Services keep components from depending directly on raw data files.
-- Utility functions keep repeated calculations out of components.
-- TypeScript catches mismatches between fake data and real app models.
+- Derived data turns raw transactions and accounts into useful UI summaries.
+- Components should format values before showing them to users.
+- Feature-specific CSS keeps dashboard styles close to dashboard code.
+- Lists need stable keys and responsive layouts from the start.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
