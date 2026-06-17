@@ -1,24 +1,43 @@
+import { NavLink, Outlet } from 'react-router-dom'
 import './App.css'
+
+const navigationItems = [
+  { to: '/', label: 'Dashboard', end: true },
+  { to: '/transactions', label: 'Transactions' },
+  { to: '/budgets', label: 'Budgets' },
+  { to: '/accounts', label: 'Accounts' },
+  { to: '/reports', label: 'Reports' },
+  { to: '/goals', label: 'Goals' },
+  { to: '/settings', label: 'Settings' },
+]
 
 function App() {
   return (
     <main className="app-shell">
-      <section className="intro-panel" aria-labelledby="page-title">
-        <p className="eyebrow">Personal finance dashboard</p>
-        <h1 id="page-title">MoneyMap</h1>
-        <p className="intro-copy">
-          A React and TypeScript app for tracking income, expenses, budgets,
-          accounts, and reports.
-        </p>
-      </section>
+      <nav className="top-nav" aria-label="Primary navigation">
+        {navigationItems.map((item) => (
+          <NavLink
+            className={({ isActive }) =>
+              isActive ? 'nav-link nav-link-active' : 'nav-link'
+            }
+            end={item.end}
+            key={item.to}
+            to={item.to}
+          >
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
 
       <section className="status-panel" aria-labelledby="status-title">
         <h2 id="status-title">Project infrastructure is ready</h2>
         <p>
-          Vite, React, TypeScript, and ESLint are set up. The next step is to
-          document the product plan and MVP scope.
+          Routing is configured with React Router. Use the navigation to move
+          between the first MoneyMap pages.
         </p>
       </section>
+
+      <Outlet />
     </main>
   )
 }
