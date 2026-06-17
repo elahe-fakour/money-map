@@ -6,12 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 7 adds the responsive app layout:
+Step 8 adds the mock finance data layer:
 
-- Desktop screens use a right-side sidebar navigation for the Persian UI.
-- Tablet and mobile screens use a fixed bottom navigation.
-- The header provides product context and quick setting indicators.
-- Page content is separated from app shell navigation.
+- `src/data` contains realistic Persian mock finance data.
+- `src/utils` contains reusable finance calculation helpers.
+- `src/services` exposes a mock finance snapshot for future UI screens.
+- Mock data follows the shared TypeScript models in `src/types`.
 
 ## Scripts
 
@@ -26,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- App shell layout wraps all routed pages with shared navigation.
-- Responsive CSS changes layout based on available screen width.
-- RTL interfaces often place primary navigation on the right side.
-- Mobile navigation should be compact, reachable, and stable.
+- Mock data lets us build UI before a real backend exists.
+- Services keep components from depending directly on raw data files.
+- Utility functions keep repeated calculations out of components.
+- TypeScript catches mismatches between fake data and real app models.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
