@@ -18,8 +18,15 @@ export type FinanceState = {
 }
 
 export type FinanceContextValue = FinanceState & {
+  addAccount: (account: Account) => void
   addTransaction: (transaction: Transaction) => void
   deleteTransaction: (transactionId: string) => void
+  transferBetweenAccounts: (payload: {
+    amount: number
+    fromAccountId: string
+    note?: string
+    toAccountId: string
+  }) => void
   updateTransaction: (transaction: Transaction) => void
 }
 

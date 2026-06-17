@@ -6,13 +6,13 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 14 adds finance state management:
+Step 15 builds accounts management:
 
-- `FinanceProvider` stores the shared finance data with `useReducer`.
-- `useFinance` gives routes access to accounts, categories, budgets, settings,
-  goals, and transactions.
-- Transaction add, update, and delete actions now update shared app state.
-- Dashboard and Transactions read from the same state source.
+- The accounts page shows account cards and total balance.
+- Users can add a new account with type, balance, and color.
+- Users can transfer money between accounts.
+- Transfers update account balances and add a transfer transaction to shared
+  state.
 
 ## Scripts
 
@@ -27,10 +27,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Context makes shared state available across route components.
-- Reducers centralize how state changes happen.
-- Actions describe state changes in a predictable way.
-- Derived UI, such as dashboard totals, should read from shared state.
+- Shared state lets account changes affect other pages.
+- Reducer actions can update multiple related data collections.
+- Forms can start simple when browser validation is enough.
+- Financial transfers need careful source and destination rules.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
