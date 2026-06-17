@@ -5,6 +5,18 @@ import {
   Landmark,
   WalletCards,
 } from 'lucide-react'
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import { getMockFinanceSnapshot } from '../../services'
 import {
   formatMoney,
@@ -29,6 +41,54 @@ const savingsRate = getSavingsRate(monthlyIncome, monthlyExpenses)
 const recentTransactions = [...transactions]
   .sort((first, second) => second.date.localeCompare(first.date))
   .slice(0, 4)
+
+const expenseBreakdownData = categories
+  .filter((category) => category.type === 'expense')
+  .map((category) => {
+    const value = transactions
+      .filter(
+        (transaction) =>
+          transaction.type === 'expense' && transaction.categoryId === category.id,
+      )
+      .reduce((total, transaction) => total + transaction.amount.amount, 0)
+
+    return {
+      color: category.color,
+      name: category.name,
+      value,
+    }
+  })
+  .filter((item) => item.value > 0)
+
+const cashFlowData = Array.from(
+  transactions.reduce((months, transaction) => {
+    const month = transaction.date.slice(0, 7)
+    const current = months.get(month) ?? {
+      expenses: 0,
+      income: 0,
+      month,
+    }
+
+    if (transaction.type === 'income') {
+      current.income += transaction.amount.amount
+    }
+
+    if (transaction.type === 'expense') {
+      current.expenses += transaction.amount.amount
+    }
+
+    months.set(month, current)
+
+    return months
+  }, new Map<string, { expenses: number; income: number; month: string }>()),
+)
+  .map(([, value]) => ({
+    ...value,
+    label: new Intl.DateTimeFormat('fa-IR', {
+      month: 'short',
+    }).format(new Date(`${value.month}-01`)),
+  }))
+  .sort((first, second) => first.month.localeCompare(second.month))
 
 const summaryCards = [
   {
@@ -166,6 +226,86 @@ export function DashboardPage() {
                 </div>
               )
             })}
+          </div>
+        </article>
+      </section>
+
+      <section className="chart-grid" aria-label="نمودارهای داشبورد">
+        <article className="dashboard-panel chart-panel">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">تفکیک هزینه‌ها</p>
+              <h2>هزینه بر اساس دسته‌بندی</h2>
+            </div>
+          </div>
+
+          <div className="chart-box" role="img" aria-label="نمودار دایره‌ای تفکیک هزینه‌ها">
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
+                <Pie
+                  data={expenseBreakdownData}
+                  dataKey="value"
+                  innerRadius={58}
+                  nameKey="name"
+                  outerRadius={94}
+                  paddingAngle={3}
+                >
+                  {expenseBreakdownData.map((entry) => (
+                    <Cell fill={entry.color} key={entry.name} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) =>
+                    formatMoney({ amount: Number(value), currency: 'IRR' })
+                  }
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="chart-legend">
+            {expenseBreakdownData.map((item) => (
+              <div className="legend-item" key={item.name}>
+                <span style={{ background: item.color }} aria-hidden="true" />
+                <strong>{item.name}</strong>
+                <small>{formatMoney({ amount: item.value, currency: 'IRR' })}</small>
+              </div>
+            ))}
+          </div>
+        </article>
+
+        <article className="dashboard-panel chart-panel">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">جریان نقدی</p>
+              <h2>درآمد در برابر هزینه</h2>
+            </div>
+          </div>
+
+          <div
+            className="chart-box"
+            role="img"
+            aria-label="نمودار ستونی درآمد و هزینه ماهانه"
+          >
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart data={cashFlowData}>
+                <CartesianGrid stroke="var(--color-border)" vertical={false} />
+                <XAxis dataKey="label" tickLine={false} />
+                <YAxis
+                  tickFormatter={(value) => `${Number(value) / 1_000_000}م`}
+                  tickLine={false}
+                  width={48}
+                />
+                <Tooltip
+                  formatter={(value, name) => [
+                    formatMoney({ amount: Number(value), currency: 'IRR' }),
+                    name === 'income' ? 'درآمد' : 'هزینه',
+                  ]}
+                />
+                <Bar dataKey="income" fill="var(--color-success)" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="expenses" fill="var(--color-danger)" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </article>
       </section>

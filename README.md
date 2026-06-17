@@ -6,13 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 9 builds the dashboard summary:
+Step 10 adds dashboard charts:
 
-- Dashboard cards show total balance, monthly income, monthly expenses, and
-  savings rate.
-- Recent transactions use the mock data service.
-- Budget progress previews show spent amount, limit, and status color.
-- Currency and dates are formatted for the Persian locale.
+- Recharts powers responsive dashboard visualizations.
+- Expense breakdown is grouped by category.
+- Monthly cash flow compares income and expenses across recent months.
+- Chart labels and tooltips use Persian-friendly formatting.
 
 ## Scripts
 
@@ -27,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Derived data turns raw transactions and accounts into useful UI summaries.
-- Components should format values before showing them to users.
-- Feature-specific CSS keeps dashboard styles close to dashboard code.
-- Lists need stable keys and responsive layouts from the start.
+- Charts usually need derived data, not raw API objects.
+- Responsive containers let charts adapt to dashboard layouts.
+- Tooltips and legends make visual data easier to understand.
+- Accessible labels help charts communicate their purpose beyond visuals.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
