@@ -6,13 +6,16 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 2 defines the product plan and project scope:
+Step 3 adds the frontend folder architecture:
 
-- Product goal
-- Primary user
-- MVP features
-- Future features
-- Frontend skills covered by the project
+- `src/app` for app-level setup such as routing and state providers.
+- `src/components` for reusable UI, layout, chart, and form components.
+- `src/features` for product areas such as dashboard and transactions.
+- `src/hooks` for custom React hooks.
+- `src/services` for API and data access logic.
+- `src/types` for shared TypeScript models.
+- `src/utils` for general helper functions.
+- `src/data` for mock or seed data.
 
 ## Scripts
 
@@ -27,10 +30,11 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Product scope keeps the project focused.
-- MVP features are the first useful version, not the final dream version.
-- Future features are intentionally delayed so the core app can become stable.
-- Skill mapping helps this portfolio project match React job expectations.
+- Folder structure is a communication tool for future developers.
+- Feature folders keep product-specific code close together.
+- Shared folders should stay reusable and avoid depending on one feature.
+- Empty folders need placeholder files because Git does not track directories
+  by themselves.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
