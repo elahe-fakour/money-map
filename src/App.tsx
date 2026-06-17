@@ -1,23 +1,33 @@
+import {
+  BarChart3,
+  CreditCard,
+  Gauge,
+  Goal,
+  Landmark,
+  PieChart,
+  ReceiptText,
+  Settings,
+} from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
 import './App.css'
 
 const navigationItems = [
-  { to: '/', label: 'داشبورد', shortLabel: 'خانه', symbol: 'خانه', end: true },
+  { to: '/', label: 'داشبورد', shortLabel: 'خانه', Icon: Gauge, end: true },
   {
     to: '/transactions',
     label: 'تراکنش‌ها',
     shortLabel: 'تراکنش',
-    symbol: 'ترا',
+    Icon: ReceiptText,
   },
-  { to: '/budgets', label: 'بودجه‌ها', shortLabel: 'بودجه', symbol: 'بود' },
-  { to: '/accounts', label: 'حساب‌ها', shortLabel: 'حساب', symbol: 'حس' },
-  { to: '/reports', label: 'گزارش‌ها', shortLabel: 'گزارش', symbol: 'گزا' },
-  { to: '/goals', label: 'اهداف', shortLabel: 'اهداف', symbol: 'هدف' },
+  { to: '/budgets', label: 'بودجه‌ها', shortLabel: 'بودجه', Icon: PieChart },
+  { to: '/accounts', label: 'حساب‌ها', shortLabel: 'حساب', Icon: CreditCard },
+  { to: '/reports', label: 'گزارش‌ها', shortLabel: 'گزارش', Icon: BarChart3 },
+  { to: '/goals', label: 'اهداف', shortLabel: 'اهداف', Icon: Goal },
   {
     to: '/settings',
     label: 'تنظیمات',
     shortLabel: 'تنظیم',
-    symbol: 'تنظ',
+    Icon: Settings,
   },
 ]
 
@@ -27,7 +37,7 @@ function App() {
       <aside className="app-sidebar" aria-label="ناوبری اصلی">
         <div className="brand-block">
           <span className="brand-mark" aria-hidden="true">
-            م
+            <Landmark size={24} strokeWidth={2.4} />
           </span>
           <div>
             <p className="brand-name">مانی‌مپ</p>
@@ -46,7 +56,7 @@ function App() {
               to={item.to}
             >
               <span className="nav-symbol" aria-hidden="true">
-                {item.symbol}
+                <item.Icon size={18} strokeWidth={2.25} />
               </span>
               <span>{item.label}</span>
             </NavLink>
@@ -90,7 +100,7 @@ function App() {
             to={item.to}
           >
             <span className="mobile-nav-symbol" aria-hidden="true">
-              {item.symbol}
+              <item.Icon size={17} strokeWidth={2.4} />
             </span>
             <span>{item.shortLabel}</span>
           </NavLink>

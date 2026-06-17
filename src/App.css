@@ -36,6 +36,12 @@
   font-weight: 800;
 }
 
+.brand-mark svg,
+.nav-symbol svg,
+.mobile-nav-symbol svg {
+  display: block;
+}
+
 .brand-mark {
   width: 44px;
   height: 44px;
@@ -86,7 +92,6 @@
 .nav-symbol {
   width: 32px;
   height: 32px;
-  font-size: 0.75rem;
 }
 
 .nav-link-active {
@@ -253,7 +258,6 @@
   .mobile-nav-symbol {
     width: 24px;
     height: 24px;
-    font-size: 0.625rem;
   }
 }
 
