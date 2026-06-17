@@ -6,12 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 6 configures app routing:
+Step 7 adds the responsive app layout:
 
-- `react-router-dom` provides browser routing.
-- `src/app/router.tsx` defines the central route map.
-- Feature folders contain the first page components for each route.
-- A fallback not found page handles unknown URLs.
+- Desktop screens use a right-side sidebar navigation for the Persian UI.
+- Tablet and mobile screens use a fixed bottom navigation.
+- The header provides product context and quick setting indicators.
+- Page content is separated from app shell navigation.
 
 ## Scripts
 
@@ -26,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- A route maps a URL path to a React component.
-- Layout routes can render shared UI and place child pages with `Outlet`.
-- `NavLink` can style links differently when their route is active.
-- A catch-all route keeps unknown URLs from becoming a blank page.
+- App shell layout wraps all routed pages with shared navigation.
+- Responsive CSS changes layout based on available screen width.
+- RTL interfaces often place primary navigation on the right side.
+- Mobile navigation should be compact, reachable, and stable.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
