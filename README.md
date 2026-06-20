@@ -6,13 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 15 builds accounts management:
+Step 16 builds monthly budgets:
 
-- The accounts page shows account cards and total balance.
-- Users can add a new account with type, balance, and color.
-- Users can transfer money between accounts.
-- Transfers update account balances and add a transfer transaction to shared
-  state.
+- The budgets page shows monthly category budgets.
+- Budget cards show spent amount, remaining amount, progress, and status.
+- Users can create and edit category budgets.
+- Budget progress is derived from expense transactions in shared state.
 
 ## Scripts
 
@@ -27,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Shared state lets account changes affect other pages.
-- Reducer actions can update multiple related data collections.
-- Forms can start simple when browser validation is enough.
-- Financial transfers need careful source and destination rules.
+- Derived data keeps budgets aligned with real transaction activity.
+- Status labels make thresholds visible to users.
+- Editing can reuse the same form by loading selected budget values.
+- Duplicate prevention protects data quality before a backend exists.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.

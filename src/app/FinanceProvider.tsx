@@ -5,10 +5,12 @@ import {
   type FinanceState,
 } from './FinanceContext'
 import { getMockFinanceSnapshot } from '../services'
-import type { Account, Transaction } from '../types'
+import type { Account, Budget, Transaction } from '../types'
 
 type FinanceAction =
   | { payload: Account; type: 'account/add' }
+  | { payload: Budget; type: 'budget/add' }
+  | { payload: Budget; type: 'budget/update' }
   | {
       payload: {
         amount: number
@@ -85,6 +87,18 @@ const financeReducer = (
         transactions: [transferTransaction, ...state.transactions],
       }
     }
+    case 'budget/add':
+      return {
+        ...state,
+        budgets: [action.payload, ...state.budgets],
+      }
+    case 'budget/update':
+      return {
+        ...state,
+        budgets: state.budgets.map((budget) =>
+          budget.id === action.payload.id ? action.payload : budget,
+        ),
+      }
     case 'transaction/add':
       return {
         ...state,
@@ -117,12 +131,15 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       ...state,
       addAccount: (account) =>
         dispatch({ payload: account, type: 'account/add' }),
+      addBudget: (budget) => dispatch({ payload: budget, type: 'budget/add' }),
       addTransaction: (transaction) =>
         dispatch({ payload: transaction, type: 'transaction/add' }),
       deleteTransaction: (transactionId) =>
         dispatch({ payload: transactionId, type: 'transaction/delete' }),
       transferBetweenAccounts: (payload) =>
         dispatch({ payload, type: 'account/transfer' }),
+      updateBudget: (budget) =>
+        dispatch({ payload: budget, type: 'budget/update' }),
       updateTransaction: (transaction) =>
         dispatch({ payload: transaction, type: 'transaction/update' }),
     }),
