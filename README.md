@@ -6,12 +6,14 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 16 builds monthly budgets:
+Step 17 builds savings goals:
 
-- The budgets page shows monthly category budgets.
-- Budget cards show spent amount, remaining amount, progress, and status.
-- Users can create and edit category budgets.
-- Budget progress is derived from expense transactions in shared state.
+- The savings goals page shows target amount, current amount, deadline, and
+  progress.
+- Users can create new savings goals.
+- Users can add contributions from an account to a goal.
+- Contributions update the goal, reduce the selected account balance, and add a
+  transaction to shared state.
 
 ## Scripts
 
@@ -26,10 +28,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Derived data keeps budgets aligned with real transaction activity.
-- Status labels make thresholds visible to users.
-- Editing can reuse the same form by loading selected budget values.
-- Duplicate prevention protects data quality before a backend exists.
+- Goal progress is derived from current amount divided by target amount.
+- A single user action can update multiple pieces of state.
+- Contribution flows should keep accounts and transaction history aligned.
+- Small feature pages can still reuse the same shared finance state.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
