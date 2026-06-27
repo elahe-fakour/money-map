@@ -10,7 +10,7 @@ import {
   Settings,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useFinance } from './hooks/useFinance'
 import type { AppLocale } from './types'
 import './App.css'
@@ -77,6 +77,7 @@ const shellCopy: Record<
     localeLabel: string
     mobileNavLabel: string
     quickSettingsLabel: string
+    settingsActionLabel: string
     sidebarLabel: string
   }
 > = {
@@ -84,20 +85,22 @@ const shellCopy: Record<
     brandName: 'MoneyMap',
     brandSubtitle: 'Personal finance manager',
     eyebrow: 'Product preview',
-    headerTitle: 'Responsive personal finance dashboard',
+    headerTitle: 'Everyday financial planning',
     localeLabel: 'English',
     mobileNavLabel: 'Mobile navigation',
     quickSettingsLabel: 'Quick settings',
+    settingsActionLabel: 'Open settings',
     sidebarLabel: 'Main navigation',
   },
   fa: {
     brandName: 'مانی‌مپ',
     brandSubtitle: 'مدیریت مالی شخصی',
     eyebrow: 'نسخه آزمایشی محصول',
-    headerTitle: 'داشبورد مالی فارسی و واکنش‌گرا',
+    headerTitle: 'برنامه‌ریزی مالی روزمره',
     localeLabel: 'فارسی',
     mobileNavLabel: 'ناوبری موبایل',
     quickSettingsLabel: 'تنظیمات سریع',
+    settingsActionLabel: 'رفتن به تنظیمات',
     sidebarLabel: 'ناوبری اصلی',
   },
 }
@@ -153,10 +156,18 @@ function App() {
             <p className="eyebrow">{copy.eyebrow}</p>
             <h2>{copy.headerTitle}</h2>
           </div>
-          <div className="header-actions" aria-label={copy.quickSettingsLabel}>
+          <Link
+            className="header-actions"
+            to="/settings"
+            aria-label={copy.quickSettingsLabel}
+          >
             <span className="locale-chip">{copy.localeLabel}</span>
             <span className="currency-chip">{settings.currency}</span>
-          </div>
+            <span className="settings-link-label">
+              <Settings aria-hidden="true" size={17} />
+              {copy.settingsActionLabel}
+            </span>
+          </Link>
         </header>
 
         <main className="page-content">

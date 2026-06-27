@@ -112,7 +112,7 @@
   justify-content: space-between;
   gap: var(--space-4);
   margin-bottom: var(--space-5);
-  padding: var(--space-5);
+  padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
@@ -121,17 +121,22 @@
 
 .app-header h2 {
   margin: 0;
+  font-size: 1.05rem;
 }
 
 .header-actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-2);
   justify-content: flex-end;
+  color: var(--color-text);
+  text-decoration: none;
 }
 
 .locale-chip,
-.currency-chip {
+.currency-chip,
+.settings-link-label {
   display: inline-flex;
   align-items: center;
   min-height: 36px;
@@ -141,6 +146,12 @@
   background: var(--color-surface-muted);
   color: var(--color-text);
   font-weight: 700;
+}
+
+.settings-link-label {
+  gap: var(--space-2);
+  border-color: var(--color-primary);
+  color: var(--color-primary-strong);
 }
 
 .text-link {
