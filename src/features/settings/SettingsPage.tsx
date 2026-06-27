@@ -1,4 +1,13 @@
-import { Languages, Moon, Settings2, WalletCards } from 'lucide-react'
+import {
+  Download,
+  Languages,
+  Moon,
+  Settings2,
+  Upload,
+  WalletCards,
+} from 'lucide-react'
+import { type ChangeEvent, useRef, useState } from 'react'
+import { isFinanceState } from '../../app/financeStateStorage'
 import { useFinance } from '../../hooks/useFinance'
 import type {
   AppLocale,
@@ -27,7 +36,66 @@ const themeLabels: Record<ThemeMode, string> = {
 const currencyOptions: CurrencyCode[] = ['IRR', 'USD', 'EUR', 'GBP']
 
 export function SettingsPage() {
-  const { resetFinanceData, settings, updateSettings } = useFinance()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [backupStatus, setBackupStatus] = useState('')
+  const {
+    accounts,
+    budgets,
+    categories,
+    replaceFinanceData,
+    resetFinanceData,
+    savingsGoals,
+    settings,
+    transactions,
+    updateSettings,
+  } = useFinance()
+
+  const exportBackup = () => {
+    const backup = {
+      accounts,
+      budgets,
+      categories,
+      savingsGoals,
+      settings,
+      transactions,
+    }
+    const backupJson = JSON.stringify(backup, null, 2)
+    const backupBlob = new Blob([backupJson], { type: 'application/json' })
+    const backupUrl = URL.createObjectURL(backupBlob)
+    const downloadLink = document.createElement('a')
+
+    downloadLink.href = backupUrl
+    downloadLink.download = `moneymap-backup-${new Date().toISOString().slice(0, 10)}.json`
+    document.body.append(downloadLink)
+    downloadLink.click()
+    downloadLink.remove()
+    URL.revokeObjectURL(backupUrl)
+    setBackupStatus('فایل پشتیبان آماده دانلود شد.')
+  }
+
+  const importBackup = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    if (!file) {
+      return
+    }
+
+    try {
+      const fileText = await file.text()
+      const parsedBackup = JSON.parse(fileText)
+
+      if (!isFinanceState(parsedBackup)) {
+        throw new Error('Invalid MoneyMap backup')
+      }
+
+      replaceFinanceData(parsedBackup)
+      setBackupStatus('داده‌ها از فایل پشتیبان بازیابی شدند.')
+    } catch {
+      setBackupStatus('فایل انتخاب‌شده با ساختار پشتیبان مانی‌مپ سازگار نیست.')
+    } finally {
+      event.target.value = ''
+    }
+  }
 
   return (
     <div className="settings-page">
@@ -163,9 +231,39 @@ export function SettingsPage() {
             </div>
           </div>
           <p className="settings-note">
-            داده‌ها در مرورگر ذخیره می‌شوند و بعد از refresh هم باقی می‌مانند. در
-            قدم‌های بعدی می‌توانیم خروجی گرفتن فایل یا backend اضافه کنیم.
+            داده‌ها در مرورگر ذخیره می‌شوند و بعد از refresh هم باقی می‌مانند.
+            برای جابه‌جایی بین مرورگرها می‌توانی فایل پشتیبان JSON بگیری.
           </p>
+          <div className="settings-actions">
+            <button
+              className="settings-action-button"
+              type="button"
+              onClick={exportBackup}
+            >
+              <Download aria-hidden="true" size={18} />
+              خروجی JSON
+            </button>
+            <button
+              className="settings-action-button"
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload aria-hidden="true" size={18} />
+              وارد کردن پشتیبان
+            </button>
+            <input
+              accept="application/json,.json"
+              className="settings-file-input"
+              ref={fileInputRef}
+              type="file"
+              onChange={importBackup}
+            />
+          </div>
+          {backupStatus ? (
+            <p className="settings-backup-status" role="status">
+              {backupStatus}
+            </p>
+          ) : null}
           <button
             className="settings-reset-button"
             type="button"

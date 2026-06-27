@@ -28,6 +28,7 @@ export type FinanceContextValue = FinanceState & {
     goalId: string
   }) => void
   deleteTransaction: (transactionId: string) => void
+  replaceFinanceData: (state: FinanceState) => void
   resetFinanceData: () => void
   transferBetweenAccounts: (payload: {
     amount: number

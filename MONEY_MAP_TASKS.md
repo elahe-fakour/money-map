@@ -179,3 +179,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Show the selected currency in the global header.
 - Make explicit light, dark, and system theme modes work through CSS tokens.
 - Suggested commit: `feat: apply app preferences`
+
+## 24. Data Backup And Restore
+
+- Add a JSON export action for the current finance state.
+- Add a JSON import action that validates the backup before replacing state.
+- Keep reset-to-sample-data available from settings.
+- Reuse the same finance-state validation for localStorage and imported backups.
+- Suggested commit: `feat: add data backup and restore`

@@ -117,15 +117,43 @@
   color: var(--color-primary-strong);
 }
 
+.settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.settings-action-button,
 .settings-reset-button {
   min-height: 44px;
-  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   padding: 0 var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  color: var(--color-danger);
   cursor: pointer;
+  font-weight: 900;
+}
+
+.settings-action-button {
+  color: var(--color-primary-strong);
+}
+
+.settings-reset-button {
+  justify-self: start;
+  color: var(--color-danger);
+}
+
+.settings-file-input {
+  display: none;
+}
+
+.settings-backup-status {
+  margin: 0;
+  color: var(--color-primary-strong);
   font-weight: 900;
 }
 

@@ -1,7 +1,8 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { FINANCE_STORAGE_KEY, FinanceProvider } from './FinanceProvider'
+import { FinanceProvider } from './FinanceProvider'
+import { FINANCE_STORAGE_KEY } from './financeStateStorage'
 import { useFinance } from '../hooks/useFinance'
 import { getMockFinanceSnapshot } from '../services'
 

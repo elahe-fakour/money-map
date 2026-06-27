@@ -4,6 +4,7 @@ import {
   type FinanceContextValue,
   type FinanceState,
 } from './FinanceContext'
+import { FINANCE_STORAGE_KEY, isFinanceState } from './financeStateStorage'
 import { getMockFinanceSnapshot } from '../services'
 import type { Account, AppSettings, Budget, SavingsGoal, Transaction } from '../types'
 
@@ -12,6 +13,7 @@ type FinanceAction =
   | { payload: Budget; type: 'budget/add' }
   | { payload: Budget; type: 'budget/update' }
   | { payload: AppSettings; type: 'settings/update' }
+  | { payload: FinanceState; type: 'finance/replace' }
   | { type: 'finance/reset' }
   | { payload: SavingsGoal; type: 'goal/add' }
   | {
@@ -35,26 +37,7 @@ type FinanceAction =
   | { payload: Transaction; type: 'transaction/update' }
   | { payload: string; type: 'transaction/delete' }
 
-export const FINANCE_STORAGE_KEY = 'moneymap.financeState.v1'
-
 const initialFinanceState: FinanceState = getMockFinanceSnapshot()
-
-const isStoredFinanceState = (value: unknown): value is FinanceState => {
-  if (!value || typeof value !== 'object') {
-    return false
-  }
-
-  const state = value as Partial<FinanceState>
-
-  return (
-    Array.isArray(state.accounts) &&
-    Array.isArray(state.budgets) &&
-    Array.isArray(state.categories) &&
-    Array.isArray(state.savingsGoals) &&
-    Array.isArray(state.transactions) &&
-    Boolean(state.settings)
-  )
-}
 
 const loadInitialFinanceState = (): FinanceState => {
   if (typeof window === 'undefined') {
@@ -70,7 +53,7 @@ const loadInitialFinanceState = (): FinanceState => {
 
     const parsedState = JSON.parse(storedState)
 
-    return isStoredFinanceState(parsedState) ? parsedState : initialFinanceState
+    return isFinanceState(parsedState) ? parsedState : initialFinanceState
   } catch {
     return initialFinanceState
   }
@@ -149,6 +132,8 @@ const financeReducer = (
           budget.id === action.payload.id ? action.payload : budget,
         ),
       }
+    case 'finance/replace':
+      return action.payload
     case 'finance/reset':
       return getMockFinanceSnapshot()
     case 'goal/add':
@@ -262,6 +247,8 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         dispatch({ payload, type: 'goal/contribute' }),
       deleteTransaction: (transactionId) =>
         dispatch({ payload: transactionId, type: 'transaction/delete' }),
+      replaceFinanceData: (nextState) =>
+        dispatch({ payload: nextState, type: 'finance/replace' }),
       resetFinanceData: () => dispatch({ type: 'finance/reset' }),
       transferBetweenAccounts: (payload) =>
         dispatch({ payload, type: 'account/transfer' }),
