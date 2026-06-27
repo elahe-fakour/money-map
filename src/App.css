@@ -150,8 +150,7 @@
   color: var(--color-primary-strong);
 }
 
-.intro-panel,
-.status-panel {
+.intro-panel {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
@@ -160,11 +159,6 @@
 
 .intro-panel {
   padding: var(--space-7);
-}
-
-.status-panel {
-  padding: var(--space-6);
-  margin-bottom: var(--space-5);
 }
 
 .eyebrow {
@@ -179,12 +173,6 @@
   margin: 0;
   color: var(--color-text-muted);
   font-size: 1.125rem;
-}
-
-.status-panel p {
-  max-width: 680px;
-  margin: 0;
-  color: var(--color-text-muted);
 }
 
 .mobile-nav {
@@ -224,8 +212,7 @@
     padding: var(--space-4);
   }
 
-  .intro-panel,
-  .status-panel {
+  .intro-panel {
     padding: var(--space-5);
   }
 
@@ -276,9 +263,5 @@
 @media (max-width: 480px) {
   .mobile-nav {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .status-panel {
-    display: none;
   }
 }

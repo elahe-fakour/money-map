@@ -78,8 +78,6 @@ const shellCopy: Record<
     mobileNavLabel: string
     quickSettingsLabel: string
     sidebarLabel: string
-    statusBody: string
-    statusTitle: string
   }
 > = {
   en: {
@@ -91,9 +89,6 @@ const shellCopy: Record<
     mobileNavLabel: 'Mobile navigation',
     quickSettingsLabel: 'Quick settings',
     sidebarLabel: 'Main navigation',
-    statusBody:
-      'Desktop uses a sidebar, while mobile shows the main navigation at the bottom of the screen.',
-    statusTitle: 'Responsive layout is ready',
   },
   fa: {
     brandName: 'مانی‌مپ',
@@ -104,9 +99,6 @@ const shellCopy: Record<
     mobileNavLabel: 'ناوبری موبایل',
     quickSettingsLabel: 'تنظیمات سریع',
     sidebarLabel: 'ناوبری اصلی',
-    statusBody:
-      'در دسکتاپ از سایدبار استفاده می‌کنیم و در موبایل ناوبری پایین صفحه نمایش داده می‌شود.',
-    statusTitle: 'چیدمان واکنش‌گرا آماده است',
   },
 }
 
@@ -166,11 +158,6 @@ function App() {
             <span className="currency-chip">{settings.currency}</span>
           </div>
         </header>
-
-        <section className="status-panel" aria-labelledby="status-title">
-          <h2 id="status-title">{copy.statusTitle}</h2>
-          <p>{copy.statusBody}</p>
-        </section>
 
         <main className="page-content">
           <Outlet />
