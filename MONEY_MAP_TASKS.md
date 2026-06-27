@@ -171,3 +171,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add a settings action to reset the app to sample data.
 - Cover persisted state behavior with provider tests.
 - Suggested commit: `feat: persist finance state locally`
+
+## 23. Apply App Preferences
+
+- Apply saved language, direction, and theme settings to the document.
+- Localize the app shell navigation and header between Persian and English.
+- Show the selected currency in the global header.
+- Make explicit light, dark, and system theme modes work through CSS tokens.
+- Suggested commit: `feat: apply app preferences`
