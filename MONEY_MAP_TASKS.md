@@ -163,3 +163,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Store settings changes in shared finance state.
 - Keep data import/export as a documented future feature.
 - Suggested commit: `feat: build app settings page`
+
+## 22. Local Storage Persistence
+
+- Load finance state from browser localStorage when the app starts.
+- Save finance state changes back to localStorage automatically.
+- Add a settings action to reset the app to sample data.
+- Cover persisted state behavior with provider tests.
+- Suggested commit: `feat: persist finance state locally`

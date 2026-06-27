@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useReducer } from 'react'
+import { type ReactNode, useEffect, useMemo, useReducer } from 'react'
 import {
   FinanceContext,
   type FinanceContextValue,
@@ -12,6 +12,7 @@ type FinanceAction =
   | { payload: Budget; type: 'budget/add' }
   | { payload: Budget; type: 'budget/update' }
   | { payload: AppSettings; type: 'settings/update' }
+  | { type: 'finance/reset' }
   | { payload: SavingsGoal; type: 'goal/add' }
   | {
       payload: {
@@ -34,7 +35,46 @@ type FinanceAction =
   | { payload: Transaction; type: 'transaction/update' }
   | { payload: string; type: 'transaction/delete' }
 
+export const FINANCE_STORAGE_KEY = 'moneymap.financeState.v1'
+
 const initialFinanceState: FinanceState = getMockFinanceSnapshot()
+
+const isStoredFinanceState = (value: unknown): value is FinanceState => {
+  if (!value || typeof value !== 'object') {
+    return false
+  }
+
+  const state = value as Partial<FinanceState>
+
+  return (
+    Array.isArray(state.accounts) &&
+    Array.isArray(state.budgets) &&
+    Array.isArray(state.categories) &&
+    Array.isArray(state.savingsGoals) &&
+    Array.isArray(state.transactions) &&
+    Boolean(state.settings)
+  )
+}
+
+const loadInitialFinanceState = (): FinanceState => {
+  if (typeof window === 'undefined') {
+    return initialFinanceState
+  }
+
+  try {
+    const storedState = window.localStorage.getItem(FINANCE_STORAGE_KEY)
+
+    if (!storedState) {
+      return initialFinanceState
+    }
+
+    const parsedState = JSON.parse(storedState)
+
+    return isStoredFinanceState(parsedState) ? parsedState : initialFinanceState
+  } catch {
+    return initialFinanceState
+  }
+}
 
 const financeReducer = (
   state: FinanceState,
@@ -109,6 +149,8 @@ const financeReducer = (
           budget.id === action.payload.id ? action.payload : budget,
         ),
       }
+    case 'finance/reset':
+      return getMockFinanceSnapshot()
     case 'goal/add':
       return {
         ...state,
@@ -197,7 +239,15 @@ const financeReducer = (
 }
 
 export function FinanceProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(financeReducer, initialFinanceState)
+  const [state, dispatch] = useReducer(
+    financeReducer,
+    initialFinanceState,
+    loadInitialFinanceState,
+  )
+
+  useEffect(() => {
+    window.localStorage.setItem(FINANCE_STORAGE_KEY, JSON.stringify(state))
+  }, [state])
 
   const value = useMemo<FinanceContextValue>(
     () => ({
@@ -212,6 +262,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         dispatch({ payload, type: 'goal/contribute' }),
       deleteTransaction: (transactionId) =>
         dispatch({ payload: transactionId, type: 'transaction/delete' }),
+      resetFinanceData: () => dispatch({ type: 'finance/reset' }),
       transferBetweenAccounts: (payload) =>
         dispatch({ payload, type: 'account/transfer' }),
       updateSettings: (settings) =>

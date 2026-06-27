@@ -1,8 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
-import { FinanceProvider } from './FinanceProvider'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { FINANCE_STORAGE_KEY, FinanceProvider } from './FinanceProvider'
 import { useFinance } from '../hooks/useFinance'
+import { getMockFinanceSnapshot } from '../services'
 
 function FinanceHarness() {
   const { addTransaction, deleteTransaction, transactions } = useFinance()
@@ -39,6 +40,14 @@ function FinanceHarness() {
 }
 
 describe('FinanceProvider', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
+  afterEach(() => {
+    cleanup()
+  })
+
   it('adds and deletes transactions through shared state actions', async () => {
     const user = userEvent.setup()
 
@@ -56,5 +65,44 @@ describe('FinanceProvider', () => {
     await user.click(screen.getByRole('button', { name: 'حذف تراکنش تست' }))
     expect(screen.getByText('تعداد تراکنش‌ها: 14')).toBeInTheDocument()
   })
-})
 
+  it('loads finance state from local storage', () => {
+    const storedState = {
+      ...getMockFinanceSnapshot(),
+      transactions: [],
+    }
+
+    window.localStorage.setItem(
+      FINANCE_STORAGE_KEY,
+      JSON.stringify(storedState),
+    )
+
+    render(
+      <FinanceProvider>
+        <FinanceHarness />
+      </FinanceProvider>,
+    )
+
+    expect(screen.getByText('تعداد تراکنش‌ها: 0')).toBeInTheDocument()
+  })
+
+  it('saves finance state changes to local storage', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <FinanceProvider>
+        <FinanceHarness />
+      </FinanceProvider>,
+    )
+
+    await user.click(screen.getByRole('button', { name: 'افزودن تراکنش تست' }))
+
+    await waitFor(() => {
+      const storedState = JSON.parse(
+        window.localStorage.getItem(FINANCE_STORAGE_KEY) ?? '{}',
+      )
+
+      expect(storedState.transactions).toHaveLength(15)
+    })
+  })
+})

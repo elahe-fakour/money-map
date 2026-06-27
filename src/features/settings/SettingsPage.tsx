@@ -27,7 +27,7 @@ const themeLabels: Record<ThemeMode, string> = {
 const currencyOptions: CurrencyCode[] = ['IRR', 'USD', 'EUR', 'GBP']
 
 export function SettingsPage() {
-  const { settings, updateSettings } = useFinance()
+  const { resetFinanceData, settings, updateSettings } = useFinance()
 
   return (
     <div className="settings-page">
@@ -163,9 +163,16 @@ export function SettingsPage() {
             </div>
           </div>
           <p className="settings-note">
-            فعلاً داده‌ها در state برنامه و mock data نگهداری می‌شوند. در قدم‌های
-            بعدی می‌توانیم ذخیره‌سازی دائمی مثل localStorage یا backend اضافه کنیم.
+            داده‌ها در مرورگر ذخیره می‌شوند و بعد از refresh هم باقی می‌مانند. در
+            قدم‌های بعدی می‌توانیم خروجی گرفتن فایل یا backend اضافه کنیم.
           </p>
+          <button
+            className="settings-reset-button"
+            type="button"
+            onClick={resetFinanceData}
+          >
+            بازنشانی داده‌های نمونه
+          </button>
         </article>
       </section>
     </div>
