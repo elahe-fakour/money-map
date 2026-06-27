@@ -1,13 +1,23 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { type ReactNode, Suspense } from 'react'
 import App from '../App'
-import { AccountsPage } from '../features/accounts/AccountsPage'
-import { BudgetsPage } from '../features/budgets/BudgetsPage'
-import { DashboardPage } from '../features/dashboard/DashboardPage'
-import { GoalsPage } from '../features/goals/GoalsPage'
-import { NotFoundPage } from '../features/not-found/NotFoundPage'
-import { ReportsPage } from '../features/reports/ReportsPage'
-import { SettingsPage } from '../features/settings/SettingsPage'
-import { TransactionsPage } from '../features/transactions/TransactionsPage'
+import {
+  AccountsPage,
+  BudgetsPage,
+  DashboardPage,
+  GoalsPage,
+  NotFoundPage,
+  ReportsPage,
+  RouteFallback,
+  SettingsPage,
+  TransactionsPage,
+} from './LazyPages'
+
+const withRouteFallback = (page: ReactNode) => (
+  <Suspense fallback={<RouteFallback />}>
+    {page}
+  </Suspense>
+)
 
 export const router = createBrowserRouter([
   {
@@ -16,35 +26,35 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: withRouteFallback(<DashboardPage />),
       },
       {
         path: 'transactions',
-        element: <TransactionsPage />,
+        element: withRouteFallback(<TransactionsPage />),
       },
       {
         path: 'budgets',
-        element: <BudgetsPage />,
+        element: withRouteFallback(<BudgetsPage />),
       },
       {
         path: 'accounts',
-        element: <AccountsPage />,
+        element: withRouteFallback(<AccountsPage />),
       },
       {
         path: 'reports',
-        element: <ReportsPage />,
+        element: withRouteFallback(<ReportsPage />),
       },
       {
         path: 'goals',
-        element: <GoalsPage />,
+        element: withRouteFallback(<GoalsPage />),
       },
       {
         path: 'settings',
-        element: <SettingsPage />,
+        element: withRouteFallback(<SettingsPage />),
       },
       {
         path: '*',
-        element: <NotFoundPage />,
+        element: withRouteFallback(<NotFoundPage />),
       },
     ],
   },
