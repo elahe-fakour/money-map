@@ -6,14 +6,12 @@ tracking income, expenses, accounts, budgets, savings goals, and reports.
 
 ## Current Step
 
-Step 18 builds financial reports:
+Step 19 adds tests and component stories:
 
-- The reports page summarizes income, expenses, and savings rate for the latest
-  month.
-- Charts compare income and expenses across months.
-- Expense breakdown shows category-level spending.
-- Simple insights highlight the highest spending category and savings-rate
-  change.
+- Vitest runs unit and integration tests.
+- React Testing Library checks shared finance state behavior.
+- Playwright has a first end-to-end navigation test.
+- Storybook documents the shared `PagePlaceholder` component.
 
 ## Scripts
 
@@ -28,10 +26,10 @@ npm run preview
 
 In this step, focus on these concepts:
 
-- Reports are built from derived data, not separate hard-coded numbers.
-- Month grouping is a common frontend data transformation.
-- Comparisons need a current period and a previous period.
-- Insights turn raw totals into useful user-facing explanations.
+- Unit tests are good for pure calculations.
+- Integration tests check how components and providers work together.
+- End-to-end tests verify user flows in a real browser.
+- Storybook helps develop and review reusable UI components in isolation.
 
 See `PROJECT_PLAN.md` for the product plan and `MONEY_MAP_TASKS.md` for the
 full roadmap.
