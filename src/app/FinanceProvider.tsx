@@ -5,12 +5,13 @@ import {
   type FinanceState,
 } from './FinanceContext'
 import { getMockFinanceSnapshot } from '../services'
-import type { Account, Budget, SavingsGoal, Transaction } from '../types'
+import type { Account, AppSettings, Budget, SavingsGoal, Transaction } from '../types'
 
 type FinanceAction =
   | { payload: Account; type: 'account/add' }
   | { payload: Budget; type: 'budget/add' }
   | { payload: Budget; type: 'budget/update' }
+  | { payload: AppSettings; type: 'settings/update' }
   | { payload: SavingsGoal; type: 'goal/add' }
   | {
       payload: {
@@ -166,6 +167,11 @@ const financeReducer = (
         transactions: [contributionTransaction, ...state.transactions],
       }
     }
+    case 'settings/update':
+      return {
+        ...state,
+        settings: action.payload,
+      }
     case 'transaction/add':
       return {
         ...state,
@@ -208,6 +214,8 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
         dispatch({ payload: transactionId, type: 'transaction/delete' }),
       transferBetweenAccounts: (payload) =>
         dispatch({ payload, type: 'account/transfer' }),
+      updateSettings: (settings) =>
+        dispatch({ payload: settings, type: 'settings/update' }),
       updateBudget: (budget) =>
         dispatch({ payload: budget, type: 'budget/update' }),
       updateTransaction: (transaction) =>

@@ -155,3 +155,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Complete the README.
 - Prepare the app for deployment on Vercel or Netlify.
 - Suggested commit: `docs: finalize project documentation`
+
+## 21. Settings Page Polish
+
+- Build a real settings page instead of a placeholder.
+- Add controls for language, text direction, currency, and theme mode.
+- Store settings changes in shared finance state.
+- Keep data import/export as a documented future feature.
+- Suggested commit: `feat: build app settings page`

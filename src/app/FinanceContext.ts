@@ -34,6 +34,7 @@ export type FinanceContextValue = FinanceState & {
     note?: string
     toAccountId: string
   }) => void
+  updateSettings: (settings: AppSettings) => void
   updateBudget: (budget: Budget) => void
   updateTransaction: (transaction: Transaction) => void
 }
