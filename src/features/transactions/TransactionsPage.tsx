@@ -25,6 +25,8 @@ const typeFilterOptions: { label: string; value: TypeFilter }[] = [
   { label: 'انتقال', value: 'transfer' },
 ]
 
+const getTodayDateInputValue = () => new Date().toISOString().slice(0, 10)
+
 const transactionFormSchema = z
   .object({
     accountId: z.string().min(1, 'حساب را انتخاب کن.'),
@@ -90,7 +92,7 @@ export function TransactionsPage() {
       accountId: accounts[0]?.id ?? '',
       amount: 0,
       categoryId: categories[0]?.id ?? '',
-      date: '2026-06-17',
+      date: getTodayDateInputValue(),
       note: '',
       transferAccountId: '',
       type: 'expense',
@@ -166,7 +168,7 @@ export function TransactionsPage() {
       accountId: values?.accountId ?? accounts[0]?.id ?? '',
       amount: 0,
       categoryId: values?.categoryId ?? formCategoryOptions[0]?.id ?? '',
-      date: values?.date ?? '2026-06-17',
+      date: values?.date ?? getTodayDateInputValue(),
       note: '',
       transferAccountId: '',
       type: values?.type ?? 'expense',
@@ -312,8 +314,8 @@ export function TransactionsPage() {
             </h2>
           </div>
           <p>
-            تغییرات این صفحه فعلاً در state محلی همین صفحه ذخیره می‌شود؛ در قدم
-            state management آن را سراسری می‌کنیم.
+            تغییرات تراکنش‌ها در داده‌های برنامه ذخیره می‌شود و بعد از refresh هم
+            باقی می‌ماند.
           </p>
         </div>
 

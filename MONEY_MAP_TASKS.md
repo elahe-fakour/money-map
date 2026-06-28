@@ -210,3 +210,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Avoid rendering blank chart and list panels when a selected month has partial data.
 - Keep dashboard panels visually consistent across populated and empty states.
 - Suggested commit: `style: add dashboard empty states`
+
+## 28. Transaction Form Defaults
+
+- Replace the hard-coded transaction form date with today's date.
+- Keep the date fresh when the form resets after adding or canceling edits.
+- Update stale form helper text to match the current persisted state behavior.
+- Suggested commit: `fix: use current date for transaction form`
