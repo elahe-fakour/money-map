@@ -17,6 +17,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { useState } from 'react'
 import { useFinance } from '../../hooks/useFinance'
 import {
   formatMoney,
@@ -24,6 +25,7 @@ import {
   formatShortDate,
   getLatestTransactionMonth,
   getSavingsRate,
+  getTransactionMonths,
   getTransactionsByMonth,
   getTotalBalance,
   getTotalByTransactionType,
@@ -35,7 +37,12 @@ export function DashboardPage() {
   const categoryById = new Map(
     categories.map((category) => [category.id, category]),
   )
-  const reportMonth = getLatestTransactionMonth(transactions)
+  const availableMonths = getTransactionMonths(transactions)
+  const latestMonth = getLatestTransactionMonth(transactions)
+  const [selectedMonth, setSelectedMonth] = useState(latestMonth)
+  const reportMonth = availableMonths.includes(selectedMonth)
+    ? selectedMonth
+    : latestMonth
   const monthlyTransactions = getTransactionsByMonth(transactions, reportMonth)
   const monthlyBudgets = budgets.filter((budget) => budget.month === reportMonth)
   const totalBalance = getTotalBalance(accounts)
@@ -132,6 +139,23 @@ export function DashboardPage() {
         <div className="dashboard-hero-badge" aria-label="ماه گزارش">
           {formatMonthLabel(reportMonth)}
         </div>
+      </section>
+
+      <section className="month-switcher" aria-label="انتخاب ماه گزارش">
+        {availableMonths.map((month) => (
+          <button
+            className={
+              month === reportMonth
+                ? 'month-switcher-button month-switcher-button-active'
+                : 'month-switcher-button'
+            }
+            key={month}
+            type="button"
+            onClick={() => setSelectedMonth(month)}
+          >
+            {formatMonthLabel(month)}
+          </button>
+        ))}
       </section>
 
       <section className="summary-grid" aria-label="خلاصه مالی">

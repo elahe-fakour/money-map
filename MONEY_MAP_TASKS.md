@@ -195,3 +195,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Replace the hard-coded month label with a formatted dynamic month.
 - Add tests for month selection and month-based transaction filtering.
 - Suggested commit: `fix: align dashboard metrics with report month`
+
+## 26. Dashboard Month Switcher
+
+- Extract available reporting months from transaction data.
+- Add a dashboard month switcher for reviewing previous months.
+- Keep all dashboard summary cards, recent activity, budgets, and charts tied to the selected month.
+- Add tests for transaction month extraction.
+- Suggested commit: `feat: add dashboard month switcher`

@@ -45,6 +45,11 @@ export const getLatestTransactionMonth = (
   return fallbackDate.toISOString().slice(0, 7)
 }
 
+export const getTransactionMonths = (transactions: Transaction[]): string[] =>
+  Array.from(
+    new Set(transactions.map((transaction) => transaction.date.slice(0, 7))),
+  ).sort((first, second) => second.localeCompare(first))
+
 export const getTransactionsByMonth = (
   transactions: Transaction[],
   month: string,

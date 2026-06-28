@@ -2,6 +2,7 @@ export {
   createMoney,
   getLatestTransactionMonth,
   getSavingsRate,
+  getTransactionMonths,
   getTransactionsByMonth,
   getTotalBalance,
   getTotalByTransactionType,

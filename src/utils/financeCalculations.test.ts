@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getLatestTransactionMonth,
   getSavingsRate,
+  getTransactionMonths,
   getTransactionsByMonth,
   getTotalBalance,
   getTotalByTransactionType,
@@ -87,6 +88,10 @@ describe('finance calculations', () => {
 
   it('finds the latest transaction month', () => {
     expect(getLatestTransactionMonth(transactions)).toBe('2026-06')
+  })
+
+  it('returns unique transaction months from newest to oldest', () => {
+    expect(getTransactionMonths(transactions)).toEqual(['2026-06', '2026-05'])
   })
 
   it('filters transactions by month', () => {
