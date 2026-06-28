@@ -39,6 +39,47 @@ type FinanceAction =
 
 const initialFinanceState: FinanceState = getMockFinanceSnapshot()
 
+const applyTransactionToAccounts = (
+  accounts: Account[],
+  transaction: Transaction,
+  direction: 1 | -1,
+): Account[] => {
+  const updatedAt = new Date().toISOString()
+  const amount = transaction.amount.amount * direction
+
+  return accounts.map((account) => {
+    if (account.id === transaction.accountId) {
+      const balanceDelta =
+        transaction.type === 'income' ? amount : amount * -1
+
+      return {
+        ...account,
+        balance: {
+          ...account.balance,
+          amount: account.balance.amount + balanceDelta,
+        },
+        updatedAt,
+      }
+    }
+
+    if (
+      transaction.type === 'transfer' &&
+      account.id === transaction.transferAccountId
+    ) {
+      return {
+        ...account,
+        balance: {
+          ...account.balance,
+          amount: account.balance.amount + amount,
+        },
+        updatedAt,
+      }
+    }
+
+    return account
+  })
+}
+
 const loadInitialFinanceState = (): FinanceState => {
   if (typeof window === 'undefined') {
     return initialFinanceState
@@ -202,22 +243,48 @@ const financeReducer = (
     case 'transaction/add':
       return {
         ...state,
+        accounts: applyTransactionToAccounts(
+          state.accounts,
+          action.payload,
+          1,
+        ),
         transactions: [action.payload, ...state.transactions],
       }
-    case 'transaction/update':
+    case 'transaction/update': {
+      const previousTransaction = state.transactions.find(
+        (transaction) => transaction.id === action.payload.id,
+      )
+      const accountsAfterReversal = previousTransaction
+        ? applyTransactionToAccounts(state.accounts, previousTransaction, -1)
+        : state.accounts
+
       return {
         ...state,
+        accounts: applyTransactionToAccounts(
+          accountsAfterReversal,
+          action.payload,
+          1,
+        ),
         transactions: state.transactions.map((transaction) =>
           transaction.id === action.payload.id ? action.payload : transaction,
         ),
       }
-    case 'transaction/delete':
+    }
+    case 'transaction/delete': {
+      const deletedTransaction = state.transactions.find(
+        (transaction) => transaction.id === action.payload,
+      )
+
       return {
         ...state,
+        accounts: deletedTransaction
+          ? applyTransactionToAccounts(state.accounts, deletedTransaction, -1)
+          : state.accounts,
         transactions: state.transactions.filter(
           (transaction) => transaction.id !== action.payload,
         ),
       }
+    }
     default:
       return state
   }

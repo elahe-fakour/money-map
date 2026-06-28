@@ -217,3 +217,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Keep the date fresh when the form resets after adding or canceling edits.
 - Update stale form helper text to match the current persisted state behavior.
 - Suggested commit: `fix: use current date for transaction form`
+
+## 29. Account Balance Sync
+
+- Update account balances when transactions are added.
+- Reverse balance effects when transactions are deleted.
+- Recalculate balance effects correctly when transactions are edited.
+- Cover account balance sync with provider tests.
+- Suggested commit: `fix: sync account balances with transactions`

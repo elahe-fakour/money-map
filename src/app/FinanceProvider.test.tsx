@@ -7,11 +7,14 @@ import { useFinance } from '../hooks/useFinance'
 import { getMockFinanceSnapshot } from '../services'
 
 function FinanceHarness() {
-  const { addTransaction, deleteTransaction, transactions } = useFinance()
+  const { accounts, addTransaction, deleteTransaction, transactions } =
+    useFinance()
+  const bankCard = accounts.find((account) => account.id === 'account-bank-card')
 
   return (
     <div>
       <p>تعداد تراکنش‌ها: {transactions.length}</p>
+      <p>موجودی کارت: {bankCard?.balance.amount}</p>
       <button
         type="button"
         onClick={() =>
@@ -59,12 +62,15 @@ describe('FinanceProvider', () => {
     )
 
     expect(screen.getByText('تعداد تراکنش‌ها: 14')).toBeInTheDocument()
+    expect(screen.getByText('موجودی کارت: 186500000')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'افزودن تراکنش تست' }))
     expect(screen.getByText('تعداد تراکنش‌ها: 15')).toBeInTheDocument()
+    expect(screen.getByText('موجودی کارت: 185500000')).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'حذف تراکنش تست' }))
     expect(screen.getByText('تعداد تراکنش‌ها: 14')).toBeInTheDocument()
+    expect(screen.getByText('موجودی کارت: 186500000')).toBeInTheDocument()
   })
 
   it('loads finance state from local storage', () => {
