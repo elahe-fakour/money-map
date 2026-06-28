@@ -227,6 +227,24 @@
   width: 100%;
 }
 
+.dashboard-empty-state {
+  display: grid;
+  min-height: 96px;
+  margin: 0;
+  place-items: center;
+  padding: var(--space-4);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  font-weight: 900;
+  text-align: center;
+}
+
+.dashboard-empty-state-tall {
+  min-height: 260px;
+}
+
 .chart-legend {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

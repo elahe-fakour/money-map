@@ -203,3 +203,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Keep all dashboard summary cards, recent activity, budgets, and charts tied to the selected month.
 - Add tests for transaction month extraction.
 - Suggested commit: `feat: add dashboard month switcher`
+
+## 27. Dashboard Empty States
+
+- Show useful empty states for months without recent activity, budgets, or expense breakdown data.
+- Avoid rendering blank chart and list panels when a selected month has partial data.
+- Keep dashboard panels visually consistent across populated and empty states.
+- Suggested commit: `style: add dashboard empty states`

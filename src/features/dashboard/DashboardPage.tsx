@@ -184,34 +184,42 @@ export function DashboardPage() {
           </div>
 
           <div className="transaction-list">
-            {recentTransactions.map((transaction) => {
-              const category = categoryById.get(transaction.categoryId)
-              const isExpense = transaction.type === 'expense'
+            {recentTransactions.length > 0 ? (
+              recentTransactions.map((transaction) => {
+                const category = categoryById.get(transaction.categoryId)
+                const isExpense = transaction.type === 'expense'
 
-              return (
-                <div className="transaction-row" key={transaction.id}>
-                  <span
-                    className="transaction-dot"
-                    style={{ background: category?.color }}
-                    aria-hidden="true"
-                  />
-                  <div className="transaction-main">
-                    <strong>{transaction.note ?? category?.name}</strong>
-                    <span>
-                      {category?.name} · {formatShortDate(transaction.date)}
-                    </span>
+                return (
+                  <div className="transaction-row" key={transaction.id}>
+                    <span
+                      className="transaction-dot"
+                      style={{ background: category?.color }}
+                      aria-hidden="true"
+                    />
+                    <div className="transaction-main">
+                      <strong>{transaction.note ?? category?.name}</strong>
+                      <span>
+                        {category?.name} · {formatShortDate(transaction.date)}
+                      </span>
+                    </div>
+                    <strong
+                      className={
+                        isExpense
+                          ? 'transaction-amount expense'
+                          : 'transaction-amount'
+                      }
+                    >
+                      {isExpense ? '-' : '+'}
+                      {formatMoney(transaction.amount)}
+                    </strong>
                   </div>
-                  <strong
-                    className={
-                      isExpense ? 'transaction-amount expense' : 'transaction-amount'
-                    }
-                  >
-                    {isExpense ? '-' : '+'}
-                    {formatMoney(transaction.amount)}
-                  </strong>
-                </div>
-              )
-            })}
+                )
+              })
+            ) : (
+              <p className="dashboard-empty-state">
+                برای این ماه هنوز تراکنشی ثبت نشده است.
+              </p>
+            )}
           </div>
         </article>
 
@@ -225,31 +233,37 @@ export function DashboardPage() {
           </div>
 
           <div className="budget-list">
-            {monthlyBudgets.map((budget) => {
-              const category = categoryById.get(budget.categoryId)
-              const progress = Math.round(
-                (budget.spent.amount / budget.limit.amount) * 100,
-              )
-              const cappedProgress = Math.min(progress, 100)
+            {monthlyBudgets.length > 0 ? (
+              monthlyBudgets.map((budget) => {
+                const category = categoryById.get(budget.categoryId)
+                const progress = Math.round(
+                  (budget.spent.amount / budget.limit.amount) * 100,
+                )
+                const cappedProgress = Math.min(progress, 100)
 
-              return (
-                <div className="budget-item" key={budget.id}>
-                  <div className="budget-heading">
-                    <strong>{category?.name}</strong>
-                    <span>{progress}%</span>
+                return (
+                  <div className="budget-item" key={budget.id}>
+                    <div className="budget-heading">
+                      <strong>{category?.name}</strong>
+                      <span>{progress}%</span>
+                    </div>
+                    <div className="budget-track" aria-hidden="true">
+                      <span
+                        className={`budget-fill ${budget.status}`}
+                        style={{ inlineSize: `${cappedProgress}%` }}
+                      />
+                    </div>
+                    <p>
+                      {formatMoney(budget.spent)} از {formatMoney(budget.limit)}
+                    </p>
                   </div>
-                  <div className="budget-track" aria-hidden="true">
-                    <span
-                      className={`budget-fill ${budget.status}`}
-                      style={{ inlineSize: `${cappedProgress}%` }}
-                    />
-                  </div>
-                  <p>
-                    {formatMoney(budget.spent)} از {formatMoney(budget.limit)}
-                  </p>
-                </div>
-              )
-            })}
+                )
+              })
+            ) : (
+              <p className="dashboard-empty-state">
+                برای این ماه بودجه‌ای تعریف نشده است.
+              </p>
+            )}
           </div>
         </article>
       </section>
@@ -263,39 +277,51 @@ export function DashboardPage() {
             </div>
           </div>
 
-          <div className="chart-box" role="img" aria-label="نمودار دایره‌ای تفکیک هزینه‌ها">
-            <ResponsiveContainer width="100%" height={260}>
-              <PieChart>
-                <Pie
-                  data={expenseBreakdownData}
-                  dataKey="value"
-                  innerRadius={58}
-                  nameKey="name"
-                  outerRadius={94}
-                  paddingAngle={3}
-                >
-                  {expenseBreakdownData.map((entry) => (
-                    <Cell fill={entry.color} key={entry.name} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value) =>
-                    formatMoney({ amount: Number(value), currency: 'IRR' })
-                  }
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+          {expenseBreakdownData.length > 0 ? (
+            <div
+              className="chart-box"
+              role="img"
+              aria-label="نمودار دایره‌ای تفکیک هزینه‌ها"
+            >
+              <ResponsiveContainer width="100%" height={260}>
+                <PieChart>
+                  <Pie
+                    data={expenseBreakdownData}
+                    dataKey="value"
+                    innerRadius={58}
+                    nameKey="name"
+                    outerRadius={94}
+                    paddingAngle={3}
+                  >
+                    {expenseBreakdownData.map((entry) => (
+                      <Cell fill={entry.color} key={entry.name} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(value) =>
+                      formatMoney({ amount: Number(value), currency: 'IRR' })
+                    }
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="dashboard-empty-state dashboard-empty-state-tall">
+              برای این ماه هزینه‌ای ثبت نشده تا نمودار ساخته شود.
+            </p>
+          )}
 
-          <div className="chart-legend">
-            {expenseBreakdownData.map((item) => (
-              <div className="legend-item" key={item.name}>
-                <span style={{ background: item.color }} aria-hidden="true" />
-                <strong>{item.name}</strong>
-                <small>{formatMoney({ amount: item.value, currency: 'IRR' })}</small>
-              </div>
-            ))}
-          </div>
+          {expenseBreakdownData.length > 0 ? (
+            <div className="chart-legend">
+              {expenseBreakdownData.map((item) => (
+                <div className="legend-item" key={item.name}>
+                  <span style={{ background: item.color }} aria-hidden="true" />
+                  <strong>{item.name}</strong>
+                  <small>{formatMoney({ amount: item.value, currency: 'IRR' })}</small>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </article>
 
         <article className="dashboard-panel chart-panel">
