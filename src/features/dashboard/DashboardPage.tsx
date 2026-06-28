@@ -20,8 +20,11 @@ import {
 import { useFinance } from '../../hooks/useFinance'
 import {
   formatMoney,
+  formatMonthLabel,
   formatShortDate,
+  getLatestTransactionMonth,
   getSavingsRate,
+  getTransactionsByMonth,
   getTotalBalance,
   getTotalByTransactionType,
 } from '../../utils'
@@ -32,17 +35,20 @@ export function DashboardPage() {
   const categoryById = new Map(
     categories.map((category) => [category.id, category]),
   )
+  const reportMonth = getLatestTransactionMonth(transactions)
+  const monthlyTransactions = getTransactionsByMonth(transactions, reportMonth)
+  const monthlyBudgets = budgets.filter((budget) => budget.month === reportMonth)
   const totalBalance = getTotalBalance(accounts)
-  const monthlyIncome = getTotalByTransactionType(transactions, 'income')
-  const monthlyExpenses = getTotalByTransactionType(transactions, 'expense')
+  const monthlyIncome = getTotalByTransactionType(monthlyTransactions, 'income')
+  const monthlyExpenses = getTotalByTransactionType(monthlyTransactions, 'expense')
   const savingsRate = getSavingsRate(monthlyIncome, monthlyExpenses)
-  const recentTransactions = [...transactions]
+  const recentTransactions = [...monthlyTransactions]
     .sort((first, second) => second.date.localeCompare(first.date))
     .slice(0, 4)
   const expenseBreakdownData = categories
     .filter((category) => category.type === 'expense')
     .map((category) => {
-      const value = transactions
+      const value = monthlyTransactions
         .filter(
           (transaction) =>
             transaction.type === 'expense' && transaction.categoryId === category.id,
@@ -116,7 +122,7 @@ export function DashboardPage() {
     <div className="dashboard-page">
       <section className="dashboard-hero" aria-labelledby="dashboard-title">
         <div>
-          <p className="eyebrow">خلاصه ماه جاری</p>
+          <p className="eyebrow">خلاصه {formatMonthLabel(reportMonth)}</p>
           <h1 id="dashboard-title">داشبورد</h1>
           <p className="intro-copy">
             وضعیت کلی پول، تراکنش‌های اخیر و بودجه‌های مهم این ماه را در یک
@@ -124,7 +130,7 @@ export function DashboardPage() {
           </p>
         </div>
         <div className="dashboard-hero-badge" aria-label="ماه گزارش">
-          خرداد ۱۴۰۵
+          {formatMonthLabel(reportMonth)}
         </div>
       </section>
 
@@ -195,7 +201,7 @@ export function DashboardPage() {
           </div>
 
           <div className="budget-list">
-            {budgets.map((budget) => {
+            {monthlyBudgets.map((budget) => {
               const category = categoryById.get(budget.categoryId)
               const progress = Math.round(
                 (budget.spent.amount / budget.limit.amount) * 100,

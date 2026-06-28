@@ -187,3 +187,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Keep reset-to-sample-data available from settings.
 - Reuse the same finance-state validation for localStorage and imported backups.
 - Suggested commit: `feat: add data backup and restore`
+
+## 25. Accurate Dashboard Month Metrics
+
+- Pick the dashboard reporting month from the latest transaction.
+- Filter monthly income, expenses, recent activity, budget preview, and expense breakdown by that month.
+- Replace the hard-coded month label with a formatted dynamic month.
+- Add tests for month selection and month-based transaction filtering.
+- Suggested commit: `fix: align dashboard metrics with report month`

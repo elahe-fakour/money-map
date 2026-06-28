@@ -30,6 +30,27 @@ export const getTotalByTransactionType = (
       .map((transaction) => transaction.amount),
   )
 
+export const getLatestTransactionMonth = (
+  transactions: Transaction[],
+  fallbackDate = new Date(),
+): string => {
+  const latestTransaction = [...transactions].sort((first, second) =>
+    second.date.localeCompare(first.date),
+  )[0]
+
+  if (latestTransaction) {
+    return latestTransaction.date.slice(0, 7)
+  }
+
+  return fallbackDate.toISOString().slice(0, 7)
+}
+
+export const getTransactionsByMonth = (
+  transactions: Transaction[],
+  month: string,
+): Transaction[] =>
+  transactions.filter((transaction) => transaction.date.startsWith(month))
+
 export const getSavingsRate = (
   income: MoneyAmount,
   expenses: MoneyAmount,
@@ -40,4 +61,3 @@ export const getSavingsRate = (
 
   return Math.round(((income.amount - expenses.amount) / income.amount) * 100)
 }
-

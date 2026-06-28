@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  getLatestTransactionMonth,
   getSavingsRate,
+  getTransactionsByMonth,
   getTotalBalance,
   getTotalByTransactionType,
 } from './financeCalculations'
@@ -50,6 +52,16 @@ const transactions: Transaction[] = [
     type: 'expense',
     updatedAt: '2026-06-02',
   },
+  {
+    accountId: 'account-1',
+    amount: { amount: 150, currency: 'IRR' },
+    categoryId: 'salary',
+    createdAt: '2026-05-01',
+    date: '2026-05-01',
+    id: 'transaction-3',
+    type: 'income',
+    updatedAt: '2026-05-01',
+  },
 ]
 
 describe('finance calculations', () => {
@@ -72,5 +84,14 @@ describe('finance calculations', () => {
       ),
     ).toBe(60)
   })
-})
 
+  it('finds the latest transaction month', () => {
+    expect(getLatestTransactionMonth(transactions)).toBe('2026-06')
+  })
+
+  it('filters transactions by month', () => {
+    expect(getTransactionsByMonth(transactions, '2026-05')).toEqual([
+      transactions[2],
+    ])
+  })
+})

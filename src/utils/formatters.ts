@@ -38,3 +38,8 @@ export const formatShortDate = (date: ISODateString, locale = 'fa-IR') => {
   return dateFormatters.get(locale)!.format(new Date(date))
 }
 
+export const formatMonthLabel = (month: string, locale = 'fa-IR') =>
+  new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(`${month}-01`))
