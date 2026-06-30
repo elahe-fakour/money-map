@@ -42,6 +42,29 @@
   color: var(--color-primary-strong);
 }
 
+.report-month-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.report-month-button {
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.report-month-button-active {
+  border-color: var(--color-primary);
+  background: var(--color-surface-muted);
+  color: var(--color-primary-strong);
+}
+
 .report-summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

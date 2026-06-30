@@ -233,3 +233,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Use the same live spending calculation in the dashboard budget preview.
 - Add unit coverage for category-month spending.
 - Suggested commit: `fix: share budget spending calculation`
+
+## 31. Reports Month Switcher
+
+- Reuse shared transaction-month helpers on the reports page.
+- Add a month switcher for reviewing historical reports.
+- Keep summary cards, category breakdown, insights, and previous-month comparison tied to the selected month.
+- Keep the comparison chart ordered from older to newer months.
+- Suggested commit: `feat: add reports month switcher`

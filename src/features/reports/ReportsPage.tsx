@@ -11,30 +11,29 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import { useState } from 'react'
 import { useFinance } from '../../hooks/useFinance'
-import { formatMoney, getSavingsRate } from '../../utils'
+import {
+  formatMoney,
+  formatMonthLabel,
+  getSavingsRate,
+  getTransactionMonths,
+  getTransactionsByMonth,
+} from '../../utils'
 import './ReportsPage.css'
-
-const monthFormatter = new Intl.DateTimeFormat('fa-IR', {
-  month: 'long',
-  year: 'numeric',
-})
-
-const getMonthLabel = (month: string) =>
-  monthFormatter.format(new Date(`${month}-01`))
 
 export function ReportsPage() {
   const { categories, transactions } = useFinance()
-  const availableMonths = Array.from(
-    new Set(transactions.map((transaction) => transaction.date.slice(0, 7))),
-  ).sort()
-  const selectedMonth = availableMonths.at(-1) ?? '2026-06'
-  const previousMonth = availableMonths.at(-2)
-  const monthTransactions = transactions.filter((transaction) =>
-    transaction.date.startsWith(selectedMonth),
-  )
+  const availableMonths = getTransactionMonths(transactions)
+  const latestMonth = availableMonths[0] ?? new Date().toISOString().slice(0, 7)
+  const [selectedMonth, setSelectedMonth] = useState(latestMonth)
+  const reportMonth = availableMonths.includes(selectedMonth)
+    ? selectedMonth
+    : latestMonth
+  const previousMonth = availableMonths[availableMonths.indexOf(reportMonth) + 1]
+  const monthTransactions = getTransactionsByMonth(transactions, reportMonth)
   const previousMonthTransactions = previousMonth
-    ? transactions.filter((transaction) => transaction.date.startsWith(previousMonth))
+    ? getTransactionsByMonth(transactions, previousMonth)
     : []
 
   const income = monthTransactions
@@ -76,10 +75,8 @@ export function ReportsPage() {
     .filter((item) => item.value > 0)
     .sort((first, second) => second.value - first.value)
   const highestSpendingCategory = expenseByCategory[0]
-  const comparisonData = availableMonths.map((month) => {
-    const currentTransactions = transactions.filter((transaction) =>
-      transaction.date.startsWith(month),
-    )
+  const comparisonData = [...availableMonths].reverse().map((month) => {
+    const currentTransactions = getTransactionsByMonth(transactions, month)
 
     return {
       expenses: currentTransactions
@@ -88,7 +85,7 @@ export function ReportsPage() {
       income: currentTransactions
         .filter((transaction) => transaction.type === 'income')
         .reduce((total, transaction) => total + transaction.amount.amount, 0),
-      label: getMonthLabel(month).replace('۱۴۰۵', '').trim(),
+      label: formatMonthLabel(month).replace('۱۴۰۵', '').trim(),
       month,
     }
   })
@@ -130,8 +127,25 @@ export function ReportsPage() {
         </div>
         <div className="reports-period">
           <span>دوره گزارش</span>
-          <strong>{getMonthLabel(selectedMonth)}</strong>
+          <strong>{formatMonthLabel(reportMonth)}</strong>
         </div>
+      </section>
+
+      <section className="report-month-switcher" aria-label="انتخاب ماه گزارش">
+        {availableMonths.map((month) => (
+          <button
+            className={
+              month === reportMonth
+                ? 'report-month-button report-month-button-active'
+                : 'report-month-button'
+            }
+            key={month}
+            type="button"
+            onClick={() => setSelectedMonth(month)}
+          >
+            {formatMonthLabel(month)}
+          </button>
+        ))}
       </section>
 
       <section className="report-summary-grid" aria-label="خلاصه گزارش ماهانه">
@@ -243,7 +257,7 @@ export function ReportsPage() {
           <div>
             <h2>تراکنش‌های هزینه</h2>
             <p>
-              در {getMonthLabel(selectedMonth)} تعداد{' '}
+              در {formatMonthLabel(reportMonth)} تعداد{' '}
               {
                 monthTransactions.filter(
                   (transaction) => transaction.type === 'expense',
