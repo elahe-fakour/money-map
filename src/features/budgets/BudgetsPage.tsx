@@ -2,7 +2,7 @@ import { BadgeAlert, CheckCircle2, Pencil, Plus, WalletCards } from 'lucide-reac
 import { type FormEvent, useMemo, useState } from 'react'
 import { useFinance } from '../../hooks/useFinance'
 import type { Budget, BudgetStatus } from '../../types'
-import { formatMoney } from '../../utils'
+import { formatMoney, getSpentByCategoryMonth } from '../../utils'
 import './BudgetsPage.css'
 
 type BudgetFormState = {
@@ -49,14 +49,11 @@ export function BudgetsPage() {
   )
 
   const getSpentForBudget = (budget: Pick<Budget, 'categoryId' | 'month'>) =>
-    transactions
-      .filter(
-        (transaction) =>
-          transaction.type === 'expense' &&
-          transaction.categoryId === budget.categoryId &&
-          transaction.date.startsWith(budget.month),
-      )
-      .reduce((total, transaction) => total + transaction.amount.amount, 0)
+    getSpentByCategoryMonth(
+      transactions,
+      budget.categoryId,
+      budget.month,
+    ).amount
 
   const enrichedBudgets = budgets.map((budget) => {
     const spentAmount = getSpentForBudget(budget)

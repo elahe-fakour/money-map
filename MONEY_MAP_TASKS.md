@@ -225,3 +225,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Recalculate balance effects correctly when transactions are edited.
 - Cover account balance sync with provider tests.
 - Suggested commit: `fix: sync account balances with transactions`
+
+## 30. Shared Budget Spending Calculation
+
+- Add a shared helper for calculating category spending by month.
+- Use the shared helper in the budgets page.
+- Use the same live spending calculation in the dashboard budget preview.
+- Add unit coverage for category-month spending.
+- Suggested commit: `fix: share budget spending calculation`

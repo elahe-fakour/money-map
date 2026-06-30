@@ -56,6 +56,22 @@ export const getTransactionsByMonth = (
 ): Transaction[] =>
   transactions.filter((transaction) => transaction.date.startsWith(month))
 
+export const getSpentByCategoryMonth = (
+  transactions: Transaction[],
+  categoryId: string,
+  month: string,
+): MoneyAmount =>
+  sumMoney(
+    transactions
+      .filter(
+        (transaction) =>
+          transaction.type === 'expense' &&
+          transaction.categoryId === categoryId &&
+          transaction.date.startsWith(month),
+      )
+      .map((transaction) => transaction.amount),
+  )
+
 export const getSavingsRate = (
   income: MoneyAmount,
   expenses: MoneyAmount,

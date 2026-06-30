@@ -25,6 +25,7 @@ import {
   formatShortDate,
   getLatestTransactionMonth,
   getSavingsRate,
+  getSpentByCategoryMonth,
   getTransactionMonths,
   getTransactionsByMonth,
   getTotalBalance,
@@ -236,8 +237,13 @@ export function DashboardPage() {
             {monthlyBudgets.length > 0 ? (
               monthlyBudgets.map((budget) => {
                 const category = categoryById.get(budget.categoryId)
+                const spentAmount = getSpentByCategoryMonth(
+                  transactions,
+                  budget.categoryId,
+                  budget.month,
+                ).amount
                 const progress = Math.round(
-                  (budget.spent.amount / budget.limit.amount) * 100,
+                  (spentAmount / budget.limit.amount) * 100,
                 )
                 const cappedProgress = Math.min(progress, 100)
 
@@ -254,7 +260,11 @@ export function DashboardPage() {
                       />
                     </div>
                     <p>
-                      {formatMoney(budget.spent)} از {formatMoney(budget.limit)}
+                      {formatMoney({
+                        amount: spentAmount,
+                        currency: budget.limit.currency,
+                      })}{' '}
+                      از {formatMoney(budget.limit)}
                     </p>
                   </div>
                 )

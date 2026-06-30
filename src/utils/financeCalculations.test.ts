@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   getLatestTransactionMonth,
   getSavingsRate,
+  getSpentByCategoryMonth,
   getTransactionMonths,
   getTransactionsByMonth,
   getTotalBalance,
@@ -98,5 +99,12 @@ describe('finance calculations', () => {
     expect(getTransactionsByMonth(transactions, '2026-05')).toEqual([
       transactions[2],
     ])
+  })
+
+  it('calculates spent amount for a category in a month', () => {
+    expect(getSpentByCategoryMonth(transactions, 'rent', '2026-06')).toEqual({
+      amount: 80,
+      currency: 'IRR',
+    })
   })
 })
