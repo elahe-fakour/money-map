@@ -269,3 +269,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Document the core features, tech stack, project structure, persistence, tests, and deployment notes.
 - Leave clear placeholders for live demo and screenshots.
 - Suggested commit: `docs: improve portfolio README`
+
+## 36. README Screenshots
+
+- Capture desktop screenshots for dashboard, transactions, and reports.
+- Capture a mobile dashboard screenshot.
+- Add screenshots to the README portfolio presentation.
+- Suggested commit: `docs: add portfolio screenshots`

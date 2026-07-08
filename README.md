@@ -9,7 +9,6 @@ the primary experience, English/LTR support in the app shell, persisted browser
 state, validation-heavy forms, charts, and tests.
 
 > Live demo: coming soon
-> Screenshots: coming soon
 
 ## Highlights
 
@@ -28,6 +27,24 @@ state, validation-heavy forms, charts, and tests.
   JSON backup, and restore
 - Local persistence with `localStorage`
 - Unit and integration tests with Vitest and React Testing Library
+
+## Screenshots
+
+### Dashboard
+
+![MoneyMap dashboard](docs/screenshots/dashboard.png)
+
+### Transactions
+
+![MoneyMap transactions](docs/screenshots/transactions.png)
+
+### Reports
+
+![MoneyMap reports](docs/screenshots/reports.png)
+
+### Mobile Dashboard
+
+![MoneyMap mobile dashboard](docs/screenshots/mobile-dashboard.png)
 
 ## Tech Stack
 
