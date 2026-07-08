@@ -262,3 +262,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Show the available balance in the transaction form.
 - Keep edit mode accurate by accounting for the transaction currently being edited.
 - Suggested commit: `fix: validate transaction balance`
+
+## 35. GitHub Showcase README
+
+- Rewrite the README for portfolio presentation.
+- Document the core features, tech stack, project structure, persistence, tests, and deployment notes.
+- Leave clear placeholders for live demo and screenshots.
+- Suggested commit: `docs: improve portfolio README`
