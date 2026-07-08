@@ -104,6 +104,10 @@ export function TransactionsPage() {
     control,
     name: 'type',
   }) as TransactionType
+  const selectedAccountId = useWatch({
+    control,
+    name: 'accountId',
+  })
   const accountById = useMemo(
     () => new Map(accounts.map((account) => [account.id, account])),
     [accounts],
@@ -162,6 +166,21 @@ export function TransactionsPage() {
 
     return category.type === selectedTransactionType
   })
+  const editingTransaction = transactions.find(
+    (transaction) => transaction.id === editingTransactionId,
+  )
+  const selectedAccount = accounts.find((account) => account.id === selectedAccountId)
+  const selectedAccountAvailableBalance = selectedAccount
+    ? selectedAccount.balance.amount +
+      (editingTransaction &&
+      editingTransaction.accountId === selectedAccount.id &&
+      (editingTransaction.type === 'expense' ||
+        editingTransaction.type === 'transfer')
+        ? editingTransaction.amount.amount
+        : 0)
+    : undefined
+  const shouldValidateAgainstAccountBalance =
+    selectedTransactionType === 'expense' || selectedTransactionType === 'transfer'
 
   const resetForm = (values?: Partial<TransactionFormInput>) => {
     reset({
@@ -176,6 +195,15 @@ export function TransactionsPage() {
   }
 
   const onSubmit = (values: TransactionFormValues) => {
+    if (
+      (values.type === 'expense' || values.type === 'transfer') &&
+      selectedAccountAvailableBalance !== undefined &&
+      values.amount > selectedAccountAvailableBalance
+    ) {
+      setStatusMessage('مبلغ تراکنش نباید از موجودی حساب بیشتر باشد.')
+      return
+    }
+
     const now = new Date().toISOString()
     const transactionPayload: Transaction = {
       accountId: values.accountId,
@@ -334,10 +362,25 @@ export function TransactionsPage() {
             <input
               type="number"
               inputMode="numeric"
+              max={
+                shouldValidateAgainstAccountBalance
+                  ? selectedAccountAvailableBalance
+                  : undefined
+              }
               min="0"
               step="100000"
               {...register('amount')}
             />
+            {shouldValidateAgainstAccountBalance &&
+            selectedAccountAvailableBalance !== undefined ? (
+              <small className="field-helper">
+                موجودی قابل استفاده:{' '}
+                {formatMoney({
+                  amount: selectedAccountAvailableBalance,
+                  currency: 'IRR',
+                })}
+              </small>
+            ) : null}
             {errors.amount ? (
               <small className="field-error">{errors.amount.message}</small>
             ) : null}

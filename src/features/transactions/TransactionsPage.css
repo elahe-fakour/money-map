@@ -171,6 +171,11 @@
   font-weight: 700;
 }
 
+.field-helper {
+  color: var(--color-text-muted);
+  font-weight: 800;
+}
+
 .form-actions {
   display: flex;
   align-items: end;

@@ -255,3 +255,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add a dynamic max value to the transfer amount input.
 - Show the available transferable balance near the transfer form.
 - Suggested commit: `fix: validate account transfers`
+
+## 34. Transaction Balance Validation
+
+- Prevent expense and transfer transactions from exceeding the selected account balance.
+- Show the available balance in the transaction form.
+- Keep edit mode accurate by accounting for the transaction currently being edited.
+- Suggested commit: `fix: validate transaction balance`
