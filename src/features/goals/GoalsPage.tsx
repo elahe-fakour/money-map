@@ -19,13 +19,21 @@ type ContributionFormState = {
   goalId: string
 }
 
-const initialGoalForm: GoalFormState = {
+const getDateInputValueMonthsFromNow = (months: number) => {
+  const date = new Date()
+
+  date.setMonth(date.getMonth() + months)
+
+  return date.toISOString().slice(0, 10)
+}
+
+const getInitialGoalForm = (): GoalFormState => ({
   color: '#0f766e',
   currentAmount: '',
-  deadline: '2026-12-31',
+  deadline: getDateInputValueMonthsFromNow(6),
   name: '',
   targetAmount: '',
-}
+})
 
 export function GoalsPage() {
   const {
@@ -34,7 +42,7 @@ export function GoalsPage() {
     contributeToSavingsGoal,
     savingsGoals,
   } = useFinance()
-  const [goalForm, setGoalForm] = useState<GoalFormState>(initialGoalForm)
+  const [goalForm, setGoalForm] = useState<GoalFormState>(getInitialGoalForm)
   const [contributionForm, setContributionForm] =
     useState<ContributionFormState>({
       accountId: accounts[0]?.id ?? '',
@@ -59,6 +67,16 @@ export function GoalsPage() {
       targetTotal,
     }
   }, [savingsGoals])
+  const selectedContributionGoal = savingsGoals.find(
+    (goal) => goal.id === contributionForm.goalId,
+  )
+  const contributionRemainingAmount = selectedContributionGoal
+    ? Math.max(
+        selectedContributionGoal.targetAmount.amount -
+          selectedContributionGoal.currentAmount.amount,
+        0,
+      )
+    : undefined
 
   const submitGoal = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -95,7 +113,7 @@ export function GoalsPage() {
     }
 
     addSavingsGoal(goal)
-    setGoalForm(initialGoalForm)
+    setGoalForm(getInitialGoalForm())
     setContributionForm((current) => ({
       ...current,
       goalId: current.goalId || goal.id,
@@ -115,6 +133,15 @@ export function GoalsPage() {
 
     if (!Number.isFinite(amount) || amount <= 0) {
       setStatusMessage('مبلغ واریزی باید بزرگ‌تر از صفر باشد.')
+      return
+    }
+
+    if (
+      selectedContributionGoal &&
+      amount > selectedContributionGoal.targetAmount.amount -
+        selectedContributionGoal.currentAmount.amount
+    ) {
+      setStatusMessage('مبلغ واریزی نباید از مبلغ باقی‌مانده هدف بیشتر باشد.')
       return
     }
 
@@ -343,6 +370,7 @@ export function GoalsPage() {
                 required
                 inputMode="numeric"
                 min="1"
+                max={contributionRemainingAmount}
                 step="100000"
                 type="number"
                 value={contributionForm.amount}

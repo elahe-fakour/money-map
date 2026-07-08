@@ -241,3 +241,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Keep summary cards, category breakdown, insights, and previous-month comparison tied to the selected month.
 - Keep the comparison chart ordered from older to newer months.
 - Suggested commit: `feat: add reports month switcher`
+
+## 32. Savings Goal Contribution Validation
+
+- Replace the hard-coded default savings goal deadline with a date based on today.
+- Prevent contributions that exceed the remaining goal amount.
+- Add a max value to the contribution amount input based on the selected goal.
+- Suggested commit: `fix: validate savings goal contributions`
