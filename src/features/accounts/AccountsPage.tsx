@@ -51,6 +51,9 @@ export function AccountsPage() {
   })
   const [statusMessage, setStatusMessage] = useState('')
   const totalBalance = useMemo(() => getTotalBalance(accounts), [accounts])
+  const sourceAccount = accounts.find(
+    (account) => account.id === transferForm.fromAccountId,
+  )
 
   const submitAccount = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -87,6 +90,11 @@ export function AccountsPage() {
 
     if (!Number.isFinite(amount) || amount <= 0) {
       setStatusMessage('مبلغ انتقال باید بزرگ‌تر از صفر باشد.')
+      return
+    }
+
+    if (sourceAccount && amount > sourceAccount.balance.amount) {
+      setStatusMessage('مبلغ انتقال نباید از موجودی حساب مبدا بیشتر باشد.')
       return
     }
 
@@ -278,6 +286,7 @@ export function AccountsPage() {
               <input
                 required
                 inputMode="numeric"
+                max={sourceAccount?.balance.amount}
                 min="1"
                 step="100000"
                 type="number"
@@ -290,6 +299,13 @@ export function AccountsPage() {
                 }
               />
             </label>
+
+            {sourceAccount ? (
+              <p className="account-helper">
+                موجودی قابل انتقال:{' '}
+                {formatMoney(sourceAccount.balance)}
+              </p>
+            ) : null}
 
             <label className="account-field">
               <span>یادداشت</span>

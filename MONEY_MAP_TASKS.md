@@ -248,3 +248,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Prevent contributions that exceed the remaining goal amount.
 - Add a max value to the contribution amount input based on the selected goal.
 - Suggested commit: `fix: validate savings goal contributions`
+
+## 33. Account Transfer Validation
+
+- Prevent transfers that exceed the source account balance.
+- Add a dynamic max value to the transfer amount input.
+- Show the available transferable balance near the transfer form.
+- Suggested commit: `fix: validate account transfers`
