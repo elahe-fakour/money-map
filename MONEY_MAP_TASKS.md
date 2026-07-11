@@ -283,3 +283,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add Netlify build and redirect configuration.
 - Document the deployment config files in the README.
 - Suggested commit: `chore: add deployment configuration`
+
+## 38. Portfolio Metadata
+
+- Improve the document title and meta description for portfolio presentation.
+- Add theme color metadata.
+- Add Open Graph and Twitter summary metadata for shared links.
+- Suggested commit: `docs: add portfolio metadata`
