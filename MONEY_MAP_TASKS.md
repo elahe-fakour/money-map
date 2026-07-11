@@ -276,3 +276,10 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Capture a mobile dashboard screenshot.
 - Add screenshots to the README portfolio presentation.
 - Suggested commit: `docs: add portfolio screenshots`
+
+## 37. Deployment Configuration
+
+- Add Vercel SPA fallback configuration.
+- Add Netlify build and redirect configuration.
+- Document the deployment config files in the README.
+- Suggested commit: `chore: add deployment configuration`

@@ -177,6 +177,11 @@ Recommended deployment settings:
 - Output directory: `dist`
 - Node version: active LTS, such as Node 22 or Node 24
 
+This repository also includes:
+
+- `vercel.json` for React Router fallback routes on Vercel
+- `netlify.toml` for Netlify build and SPA redirects
+
 ## Roadmap
 
 See:
