@@ -306,3 +306,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Run lint, tests, and production build one final time.
 - Update README status for the GitHub release point.
 - Suggested commit: `chore: complete release audit`
+
+## 41. GitHub Pages Deployment
+
+- Add a GitHub Actions workflow that builds and deploys MoneyMap to GitHub Pages.
+- Configure the Vite base path for the `money-map` repository URL.
+- Configure React Router to respect the deployed base path.
+- Document the GitHub Pages setup steps in README.
+- Suggested commit: `chore: add github pages deployment`

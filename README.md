@@ -168,8 +168,8 @@ The settings page also supports:
 
 ## Deployment
 
-MoneyMap is a Vite static frontend and can be deployed to Vercel, Netlify, or
-any static host.
+MoneyMap is a Vite static frontend and can be deployed to GitHub Pages, Vercel,
+Netlify, or any static host.
 
 Recommended deployment settings:
 
@@ -179,8 +179,17 @@ Recommended deployment settings:
 
 This repository also includes:
 
+- `.github/workflows/deploy-github-pages.yml` for automatic GitHub Pages deploys
 - `vercel.json` for React Router fallback routes on Vercel
 - `netlify.toml` for Netlify build and SPA redirects
+
+GitHub Pages deployment:
+
+1. Open the repository settings on GitHub.
+2. Go to **Pages**.
+3. Set **Source** to **GitHub Actions**.
+4. Push to `main`.
+5. Open the deployed URL from the completed **Deploy GitHub Pages** workflow.
 
 ## Roadmap
 
