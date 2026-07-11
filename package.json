@@ -2,7 +2,21 @@
   "name": "money-map",
   "private": true,
   "version": "0.0.0",
+  "description": "A Persian-first personal finance dashboard built with React, TypeScript, Vite, charts, validation, persistence, and tests.",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "finance",
+    "dashboard",
+    "rtl",
+    "portfolio"
+  ],
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

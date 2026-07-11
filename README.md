@@ -189,6 +189,10 @@ See:
 - `PROJECT_PLAN.md` for the product plan
 - `MONEY_MAP_TASKS.md` for the step-by-step development roadmap
 
+## License
+
+MIT
+
 ## Status
 
 MoneyMap is ready for GitHub as a portfolio project. The next showcase steps are

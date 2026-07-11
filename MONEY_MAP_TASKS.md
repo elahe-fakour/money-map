@@ -290,3 +290,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add theme color metadata.
 - Add Open Graph and Twitter summary metadata for shared links.
 - Suggested commit: `docs: add portfolio metadata`
+
+## 39. Repository Metadata
+
+- Add package description, keywords, license, and Node engine metadata.
+- Add `.nvmrc` for a consistent local Node version.
+- Add an MIT license file.
+- Document the license in README.
+- Suggested commit: `chore: add repository metadata`
