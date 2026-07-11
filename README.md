@@ -195,6 +195,6 @@ MIT
 
 ## Status
 
-MoneyMap is ready for GitHub as a portfolio project. The next showcase steps are
-adding screenshots, deploying a live demo, and doing one final responsive UI
-review.
+MoneyMap is ready for GitHub as a portfolio project. The remaining showcase
+step is deploying a live demo and replacing the placeholder above with the
+production URL.

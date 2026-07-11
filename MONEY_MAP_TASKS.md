@@ -298,3 +298,11 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Add an MIT license file.
 - Document the license in README.
 - Suggested commit: `chore: add repository metadata`
+
+## 40. Final Release Audit
+
+- Verify generated build and test output directories are ignored.
+- Confirm portfolio screenshots are tracked under docs.
+- Run lint, tests, and production build one final time.
+- Update README status for the GitHub release point.
+- Suggested commit: `chore: complete release audit`
