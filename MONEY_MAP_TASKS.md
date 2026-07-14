@@ -314,3 +314,68 @@ MoneyMap is a responsive personal finance management app for tracking income, ex
 - Configure React Router to respect the deployed base path.
 - Document the GitHub Pages setup steps in README.
 - Suggested commit: `chore: add github pages deployment`
+
+## 42. UI/UX Audit And Polish Plan
+
+- Review the current app screens from a user's point of view.
+- Define the main UX problems to fix before adding more features.
+- Prioritize readability, hierarchy, responsive behavior, form clarity, and trust.
+- Create a focused UI/UX polish roadmap for portfolio quality.
+- Suggested commit: `docs: add ui ux polish roadmap`
+
+## 43. Visual Hierarchy And Layout Polish
+
+- Improve spacing, section rhythm, and card hierarchy across the app shell.
+- Make page headers, action areas, and content sections easier to scan.
+- Keep the style consistent across dashboard, transactions, budgets, accounts, reports, goals, and settings.
+- Suggested commit: `style: polish app visual hierarchy`
+
+## 44. Dashboard UX Polish
+
+- Improve the dashboard's first impression and information priority.
+- Make summary cards, charts, recent activity, and budget preview easier to understand.
+- Add clearer helper text and meaningful visual states without making the page busy.
+- Suggested commit: `style: polish dashboard experience`
+
+## 45. Transactions UX Polish
+
+- Improve the transaction list and mobile cards for scanning and comparison.
+- Make filters, search, sort, add, edit, and delete flows feel clearer.
+- Improve empty states and transaction amount/category/account readability.
+- Suggested commit: `style: polish transactions experience`
+
+## 46. Forms And Validation UX Polish
+
+- Improve form labels, helper text, error messages, and disabled states.
+- Make validation feedback easier to understand for Persian users.
+- Keep add/edit transaction, account, budget, goal, transfer, backup, and restore flows consistent.
+- Suggested commit: `style: polish form validation ux`
+
+## 47. Navigation And Responsive UX Polish
+
+- Improve desktop sidebar and mobile navigation clarity.
+- Make active route, touch targets, and page transitions feel more polished.
+- Verify layout quality on mobile, tablet, and desktop widths.
+- Suggested commit: `style: polish responsive navigation`
+
+## 48. Accessibility And RTL Quality Pass
+
+- Check keyboard navigation, focus states, color contrast, labels, and landmark structure.
+- Improve RTL spacing and icon alignment where needed.
+- Make interactive states visible and understandable.
+- Suggested commit: `style: improve accessibility and rtl quality`
+
+## 49. Microcopy And Trust Polish
+
+- Improve Persian microcopy across headings, buttons, empty states, confirmations, and helper text.
+- Make destructive and data-changing actions feel safer and clearer.
+- Keep the tone simple, useful, and portfolio-ready.
+- Suggested commit: `style: polish product microcopy`
+
+## 50. Final UI/UX QA And Portfolio Update
+
+- Run a final visual pass across all pages.
+- Capture updated screenshots after the UI/UX polish.
+- Update README and portfolio notes with the improved live demo.
+- Run lint, tests, build, and live route checks.
+- Suggested commit: `docs: finalize ui ux polish`
