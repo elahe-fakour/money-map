@@ -264,7 +264,7 @@
 }
 
 :is(
-  .dashboard-hero-badge,
+  .dashboard-hero-metric,
   .transactions-count,
   .budgets-total,
   .accounts-total,

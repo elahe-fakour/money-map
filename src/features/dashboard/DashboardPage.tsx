@@ -49,6 +49,10 @@ export function DashboardPage() {
   const totalBalance = getTotalBalance(accounts)
   const monthlyIncome = getTotalByTransactionType(monthlyTransactions, 'income')
   const monthlyExpenses = getTotalByTransactionType(monthlyTransactions, 'expense')
+  const netCashFlow = {
+    amount: monthlyIncome.amount - monthlyExpenses.amount,
+    currency: monthlyIncome.currency,
+  }
   const savingsRate = getSavingsRate(monthlyIncome, monthlyExpenses)
   const recentTransactions = [...monthlyTransactions]
     .sort((first, second) => second.date.localeCompare(first.date))
@@ -70,6 +74,28 @@ export function DashboardPage() {
       }
     })
     .filter((item) => item.value > 0)
+    .sort((first, second) => second.value - first.value)
+  const budgetPreviewItems = monthlyBudgets.map((budget) => {
+    const category = categoryById.get(budget.categoryId)
+    const spentAmount = getSpentByCategoryMonth(
+      transactions,
+      budget.categoryId,
+      budget.month,
+    ).amount
+    const progress = Math.round((spentAmount / budget.limit.amount) * 100)
+
+    return {
+      budget,
+      cappedProgress: Math.min(progress, 100),
+      categoryName: category?.name ?? 'دسته‌بندی',
+      progress,
+      spentAmount,
+    }
+  })
+  const topExpenseCategory = expenseBreakdownData[0]
+  const mostUsedBudget = [...budgetPreviewItems].sort(
+    (first, second) => second.progress - first.progress,
+  )[0]
   const cashFlowData = Array.from(
     transactions.reduce((months, transaction) => {
       const month = transaction.date.slice(0, 7)
@@ -105,24 +131,60 @@ export function DashboardPage() {
       value: formatMoney(totalBalance),
       helper: `${accounts.length} حساب فعال`,
       Icon: WalletCards,
+      tone: 'balance',
     },
     {
       title: 'درآمد ماه',
       value: formatMoney(monthlyIncome),
       helper: 'شامل حقوق و پروژه آزاد',
       Icon: ArrowUpRight,
+      tone: 'income',
     },
     {
       title: 'هزینه ماه',
       value: formatMoney(monthlyExpenses),
       helper: 'بدون احتساب انتقال بین حساب‌ها',
       Icon: ArrowDownRight,
+      tone: 'expense',
     },
     {
       title: 'نرخ پس‌انداز',
       value: `${savingsRate}%`,
       helper: 'درآمد پس از کسر هزینه‌ها',
       Icon: BadgePercent,
+      tone: 'saving',
+    },
+  ]
+  const quickInsights = [
+    {
+      helper:
+        netCashFlow.amount >= 0
+          ? 'درآمد این ماه بیشتر از هزینه‌هاست.'
+          : 'هزینه‌ها از درآمد این ماه بیشتر شده‌اند.',
+      label: 'مانده ماه',
+      tone: netCashFlow.amount >= 0 ? 'positive' : 'negative',
+      value: formatMoney(netCashFlow),
+    },
+    {
+      helper: topExpenseCategory
+        ? formatMoney({ amount: topExpenseCategory.value, currency: 'IRR' })
+        : 'هنوز هزینه‌ای ثبت نشده است.',
+      label: 'بیشترین هزینه',
+      tone: 'neutral',
+      value: topExpenseCategory?.name ?? 'بدون هزینه',
+    },
+    {
+      helper: mostUsedBudget
+        ? `${mostUsedBudget.progress}% از بودجه ${mostUsedBudget.categoryName} استفاده شده`
+        : 'برای این ماه بودجه‌ای تعریف نشده است.',
+      label: 'نقطه توجه',
+      tone:
+        mostUsedBudget && mostUsedBudget.progress > 100
+          ? 'negative'
+          : mostUsedBudget && mostUsedBudget.progress >= 80
+            ? 'warning'
+            : 'positive',
+      value: mostUsedBudget?.categoryName ?? `${monthlyTransactions.length} تراکنش`,
     },
   ]
 
@@ -137,8 +199,17 @@ export function DashboardPage() {
             نگاه ببین.
           </p>
         </div>
-        <div className="dashboard-hero-badge" aria-label="ماه گزارش">
-          {formatMonthLabel(reportMonth)}
+        <div
+          className={
+            netCashFlow.amount >= 0
+              ? 'dashboard-hero-metric'
+              : 'dashboard-hero-metric dashboard-hero-metric-negative'
+          }
+          aria-label="مانده ماه"
+        >
+          <span>مانده ماه</span>
+          <strong>{formatMoney(netCashFlow)}</strong>
+          <small>{formatMonthLabel(reportMonth)}</small>
         </div>
       </section>
 
@@ -159,12 +230,28 @@ export function DashboardPage() {
         ))}
       </section>
 
+      <section className="dashboard-insight-grid" aria-label="بینش سریع داشبورد">
+        {quickInsights.map((insight) => (
+          <article
+            className={`dashboard-insight dashboard-insight-${insight.tone}`}
+            key={insight.label}
+          >
+            <span>{insight.label}</span>
+            <strong>{insight.value}</strong>
+            <p>{insight.helper}</p>
+          </article>
+        ))}
+      </section>
+
       <section className="summary-grid" aria-label="خلاصه مالی">
         {summaryCards.map((card) => (
-          <article className="summary-card" key={card.title}>
-            <span className="summary-icon" aria-hidden="true">
-              <card.Icon size={20} strokeWidth={2.3} />
-            </span>
+          <article className={`summary-card summary-card-${card.tone}`} key={card.title}>
+            <div className="summary-card-top">
+              <span className="summary-icon" aria-hidden="true">
+                <card.Icon size={20} strokeWidth={2.3} />
+              </span>
+              <span className="summary-status" aria-hidden="true" />
+            </div>
             <div>
               <p className="summary-title">{card.title}</p>
               <strong className="summary-value">{card.value}</strong>
@@ -234,41 +321,28 @@ export function DashboardPage() {
           </div>
 
           <div className="budget-list">
-            {monthlyBudgets.length > 0 ? (
-              monthlyBudgets.map((budget) => {
-                const category = categoryById.get(budget.categoryId)
-                const spentAmount = getSpentByCategoryMonth(
-                  transactions,
-                  budget.categoryId,
-                  budget.month,
-                ).amount
-                const progress = Math.round(
-                  (spentAmount / budget.limit.amount) * 100,
-                )
-                const cappedProgress = Math.min(progress, 100)
-
-                return (
-                  <div className="budget-item" key={budget.id}>
+            {budgetPreviewItems.length > 0 ? (
+              budgetPreviewItems.map((item) => (
+                  <div className="budget-item" key={item.budget.id}>
                     <div className="budget-heading">
-                      <strong>{category?.name}</strong>
-                      <span>{progress}%</span>
+                      <strong>{item.categoryName}</strong>
+                      <span>{item.progress}%</span>
                     </div>
                     <div className="budget-track" aria-hidden="true">
                       <span
-                        className={`budget-fill ${budget.status}`}
-                        style={{ inlineSize: `${cappedProgress}%` }}
+                        className={`budget-fill ${item.budget.status}`}
+                        style={{ inlineSize: `${item.cappedProgress}%` }}
                       />
                     </div>
                     <p>
                       {formatMoney({
-                        amount: spentAmount,
-                        currency: budget.limit.currency,
+                        amount: item.spentAmount,
+                        currency: item.budget.limit.currency,
                       })}{' '}
-                      از {formatMoney(budget.limit)}
+                      از {formatMoney(item.budget.limit)}
                     </p>
                   </div>
-                )
-              })
+                ))
             ) : (
               <p className="dashboard-empty-state">
                 برای این ماه بودجه‌ای تعریف نشده است.
