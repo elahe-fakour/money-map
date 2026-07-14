@@ -65,6 +65,11 @@
   color: var(--color-primary-strong);
 }
 
+.report-month-button:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
 .report-summary-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

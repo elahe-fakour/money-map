@@ -74,6 +74,7 @@ const shellCopy: Record<
     brandSubtitle: string
     eyebrow: string
     headerTitle: string
+    skipToContentLabel: string
     localeLabel: string
     mobileNavLabel: string
     currentPageLabel: string
@@ -87,6 +88,7 @@ const shellCopy: Record<
     brandSubtitle: 'Personal finance manager',
     eyebrow: 'Product preview',
     headerTitle: 'Everyday financial planning',
+    skipToContentLabel: 'Skip to main content',
     localeLabel: 'English',
     mobileNavLabel: 'Mobile navigation',
     currentPageLabel: 'Current page',
@@ -99,6 +101,7 @@ const shellCopy: Record<
     brandSubtitle: 'مدیریت مالی شخصی',
     eyebrow: 'نسخه آزمایشی محصول',
     headerTitle: 'برنامه‌ریزی مالی روزمره',
+    skipToContentLabel: 'پرش به محتوای اصلی',
     localeLabel: 'فارسی',
     mobileNavLabel: 'ناوبری موبایل',
     currentPageLabel: 'صفحه فعلی',
@@ -130,6 +133,10 @@ function App() {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        {copy.skipToContentLabel}
+      </a>
+
       <aside className="app-sidebar" aria-label={copy.sidebarLabel}>
         <div className="brand-block">
           <span className="brand-mark" aria-hidden="true">
@@ -183,7 +190,7 @@ function App() {
           </Link>
         </header>
 
-        <main className="page-content">
+        <main className="page-content" id="main-content" tabIndex={-1}>
           <Outlet />
         </main>
       </div>

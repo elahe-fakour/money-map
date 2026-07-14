@@ -373,6 +373,7 @@ export function TransactionsPage() {
                   ? 'filter-button filter-button-active'
                   : 'filter-button'
               }
+              aria-pressed={typeFilter === option.value}
               key={option.value}
               type="button"
               onClick={() => setTypeFilter(option.value)}

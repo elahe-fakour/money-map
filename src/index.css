@@ -126,6 +126,15 @@ a {
   box-shadow: var(--focus-ring);
 }
 
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
 h1 {
   margin: 0 0 var(--space-3);
   color: var(--color-text);
@@ -149,5 +158,16 @@ p {
 @media (max-width: 640px) {
   h1 {
     font-size: 2.125rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

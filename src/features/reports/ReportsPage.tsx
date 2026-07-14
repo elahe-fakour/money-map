@@ -139,6 +139,7 @@ export function ReportsPage() {
                 ? 'report-month-button report-month-button-active'
                 : 'report-month-button'
             }
+            aria-pressed={month === reportMonth}
             key={month}
             type="button"
             onClick={() => setSelectedMonth(month)}

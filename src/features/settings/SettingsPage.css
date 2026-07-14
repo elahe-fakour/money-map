@@ -117,6 +117,14 @@
   color: var(--color-primary-strong);
 }
 
+.settings-chip:focus-visible,
+.settings-action-button:focus-visible,
+.settings-reset-button:focus-visible,
+.settings-field select:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
 .settings-actions {
   display: flex;
   flex-wrap: wrap;

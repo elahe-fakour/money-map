@@ -5,6 +5,30 @@
   background: var(--color-background);
 }
 
+.skip-link {
+  position: fixed;
+  inset-block-start: var(--space-4);
+  inset-inline-start: var(--space-4);
+  z-index: 100;
+  transform: translateY(calc(-100% - var(--space-4)));
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-primary-strong);
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .app-sidebar {
   position: sticky;
   top: 0;
@@ -240,6 +264,11 @@
 .page-content {
   display: grid;
   gap: var(--space-6);
+  scroll-margin-block-start: var(--space-6);
+}
+
+.page-content:focus {
+  outline: none;
 }
 
 :is(

@@ -221,6 +221,7 @@ export function DashboardPage() {
                 ? 'month-switcher-button month-switcher-button-active'
                 : 'month-switcher-button'
             }
+            aria-pressed={month === reportMonth}
             key={month}
             type="button"
             onClick={() => setSelectedMonth(month)}

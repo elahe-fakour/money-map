@@ -180,6 +180,7 @@ export function SettingsPage() {
                     ? 'settings-chip settings-chip-active'
                     : 'settings-chip'
                 }
+                aria-pressed={settings.currency === currency}
                 key={currency}
                 type="button"
                 onClick={() => updateSettings({ ...settings, currency })}
@@ -207,6 +208,7 @@ export function SettingsPage() {
                     ? 'settings-chip settings-chip-active'
                     : 'settings-chip'
                 }
+                aria-pressed={settings.themeMode === value}
                 key={value}
                 type="button"
                 onClick={() =>

@@ -73,6 +73,11 @@
   color: var(--color-primary-strong);
 }
 
+.month-switcher-button:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

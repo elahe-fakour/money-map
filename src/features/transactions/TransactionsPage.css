@@ -133,6 +133,13 @@
   color: var(--color-primary-strong);
 }
 
+.filter-button:focus-visible,
+.sort-field:focus-within,
+.search-field:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
 .sort-field {
   padding-inline: var(--space-3);
 }
