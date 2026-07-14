@@ -105,6 +105,12 @@
   font-weight: 800;
 }
 
+.budget-field small {
+  color: var(--color-text-muted);
+  font-weight: 800;
+  line-height: 1.7;
+}
+
 .budget-field input,
 .budget-field select {
   min-height: 44px;
@@ -115,6 +121,13 @@
   background: var(--color-surface-muted);
   color: var(--color-text);
   outline: 0;
+}
+
+.budget-field input:focus,
+.budget-field select:focus {
+  border-color: var(--color-primary);
+  background: var(--color-surface);
+  box-shadow: var(--focus-ring);
 }
 
 .budget-form-actions {
@@ -137,6 +150,11 @@
   color: var(--color-surface);
 }
 
+.budget-form-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
 .budget-form-actions .secondary-button {
   border: 1px solid var(--color-border);
   background: var(--color-surface-muted);
@@ -146,10 +164,17 @@
 .budget-status {
   margin-top: var(--space-4);
   padding: var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--color-success) 45%, transparent);
   border-radius: var(--radius-md);
-  background: var(--color-surface-muted);
-  color: var(--color-primary-strong);
+  background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface));
+  color: var(--color-success);
   font-weight: 800;
+}
+
+.budget-status-error {
+  border-color: color-mix(in srgb, var(--color-danger) 45%, transparent);
+  background: color-mix(in srgb, var(--color-danger) 10%, var(--color-surface));
+  color: var(--color-danger);
 }
 
 .budget-card {

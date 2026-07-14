@@ -50,10 +50,22 @@ export function AccountsPage() {
     toAccountId: accounts[1]?.id ?? '',
   })
   const [statusMessage, setStatusMessage] = useState('')
+  const [statusTone, setStatusTone] = useState<'error' | 'success'>('success')
   const totalBalance = useMemo(() => getTotalBalance(accounts), [accounts])
   const sourceAccount = accounts.find(
     (account) => account.id === transferForm.fromAccountId,
   )
+  const accountBalance = Number(accountForm.balance)
+  const transferAmount = Number(transferForm.amount)
+  const isAccountSubmitDisabled =
+    accountForm.name.trim().length === 0 ||
+    !Number.isFinite(accountBalance) ||
+    accountBalance < 0
+  const isTransferSubmitDisabled =
+    !Number.isFinite(transferAmount) ||
+    transferAmount <= 0 ||
+    transferForm.fromAccountId === transferForm.toAccountId ||
+    (sourceAccount ? transferAmount > sourceAccount.balance.amount : true)
 
   const submitAccount = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -75,6 +87,7 @@ export function AccountsPage() {
       updatedAt: now,
     })
     setAccountForm(initialAccountForm)
+    setStatusTone('success')
     setStatusMessage('حساب جدید اضافه شد.')
   }
 
@@ -84,16 +97,19 @@ export function AccountsPage() {
     const amount = Number(transferForm.amount)
 
     if (transferForm.fromAccountId === transferForm.toAccountId) {
+      setStatusTone('error')
       setStatusMessage('حساب مبدا و مقصد نباید یکسان باشند.')
       return
     }
 
     if (!Number.isFinite(amount) || amount <= 0) {
+      setStatusTone('error')
       setStatusMessage('مبلغ انتقال باید بزرگ‌تر از صفر باشد.')
       return
     }
 
     if (sourceAccount && amount > sourceAccount.balance.amount) {
+      setStatusTone('error')
       setStatusMessage('مبلغ انتقال نباید از موجودی حساب مبدا بیشتر باشد.')
       return
     }
@@ -109,6 +125,7 @@ export function AccountsPage() {
       amount: '',
       note: '',
     }))
+    setStatusTone('success')
     setStatusMessage('انتقال بین حساب‌ها ثبت شد.')
   }
 
@@ -176,6 +193,7 @@ export function AccountsPage() {
                 }
                 placeholder="مثلاً کارت حقوق"
               />
+              <small>نامی بنویس که بعداً در تراکنش‌ها سریع تشخیص بدهی.</small>
             </label>
 
             <label className="account-field">
@@ -213,6 +231,7 @@ export function AccountsPage() {
                   }))
                 }
               />
+              <small>اگر حساب تازه ساخته شده، می‌توانی موجودی را صفر بگذاری.</small>
             </label>
 
             <label className="account-field">
@@ -229,7 +248,9 @@ export function AccountsPage() {
               />
             </label>
 
-            <button type="submit">افزودن حساب</button>
+            <button type="submit" disabled={isAccountSubmitDisabled}>
+              افزودن حساب
+            </button>
           </form>
         </article>
 
@@ -298,6 +319,10 @@ export function AccountsPage() {
                   }))
                 }
               />
+              <small>
+                حداکثر قابل انتقال:{' '}
+                {sourceAccount ? formatMoney(sourceAccount.balance) : 'حساب مبدا را انتخاب کن'}
+              </small>
             </label>
 
             {sourceAccount ? (
@@ -321,13 +346,15 @@ export function AccountsPage() {
               />
             </label>
 
-            <button type="submit">ثبت انتقال</button>
+            <button type="submit" disabled={isTransferSubmitDisabled}>
+              ثبت انتقال
+            </button>
           </form>
         </article>
       </section>
 
       {statusMessage ? (
-        <div className="account-status" role="status">
+        <div className={`account-status account-status-${statusTone}`} role="status">
           {statusMessage}
         </div>
       ) : null}

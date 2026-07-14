@@ -50,6 +50,7 @@ export function GoalsPage() {
       goalId: savingsGoals[0]?.id ?? '',
     })
   const [statusMessage, setStatusMessage] = useState('')
+  const [statusTone, setStatusTone] = useState<'error' | 'success'>('success')
 
   const goalStats = useMemo(() => {
     const targetTotal = savingsGoals.reduce(
@@ -77,20 +78,38 @@ export function GoalsPage() {
         0,
       )
     : undefined
+  const targetAmount = Number(goalForm.targetAmount)
+  const currentAmount = Number(goalForm.currentAmount || 0)
+  const contributionAmount = Number(contributionForm.amount)
+  const isGoalSubmitDisabled =
+    goalForm.name.trim().length === 0 ||
+    !goalForm.deadline ||
+    !Number.isFinite(targetAmount) ||
+    targetAmount <= 0 ||
+    !Number.isFinite(currentAmount) ||
+    currentAmount < 0 ||
+    currentAmount > targetAmount
+  const isContributionSubmitDisabled =
+    !contributionForm.goalId ||
+    !contributionForm.accountId ||
+    !Number.isFinite(contributionAmount) ||
+    contributionAmount <= 0 ||
+    (contributionRemainingAmount !== undefined &&
+      contributionAmount > contributionRemainingAmount)
 
   const submitGoal = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    const targetAmount = Number(goalForm.targetAmount)
-    const currentAmount = Number(goalForm.currentAmount || 0)
     const now = new Date().toISOString()
 
     if (!Number.isFinite(targetAmount) || targetAmount <= 0) {
+      setStatusTone('error')
       setStatusMessage('مبلغ هدف باید بزرگ‌تر از صفر باشد.')
       return
     }
 
     if (currentAmount > targetAmount) {
+      setStatusTone('error')
       setStatusMessage('مبلغ فعلی نباید از مبلغ هدف بیشتر باشد.')
       return
     }
@@ -118,6 +137,7 @@ export function GoalsPage() {
       ...current,
       goalId: current.goalId || goal.id,
     }))
+    setStatusTone('success')
     setStatusMessage('هدف پس‌انداز جدید اضافه شد.')
   }
 
@@ -127,11 +147,13 @@ export function GoalsPage() {
     const amount = Number(contributionForm.amount)
 
     if (!contributionForm.goalId || !contributionForm.accountId) {
+      setStatusTone('error')
       setStatusMessage('هدف و حساب را انتخاب کن.')
       return
     }
 
     if (!Number.isFinite(amount) || amount <= 0) {
+      setStatusTone('error')
       setStatusMessage('مبلغ واریزی باید بزرگ‌تر از صفر باشد.')
       return
     }
@@ -141,6 +163,7 @@ export function GoalsPage() {
       amount > selectedContributionGoal.targetAmount.amount -
         selectedContributionGoal.currentAmount.amount
     ) {
+      setStatusTone('error')
       setStatusMessage('مبلغ واریزی نباید از مبلغ باقی‌مانده هدف بیشتر باشد.')
       return
     }
@@ -154,6 +177,7 @@ export function GoalsPage() {
       ...current,
       amount: '',
     }))
+    setStatusTone('success')
     setStatusMessage('واریزی هدف پس‌انداز ثبت شد.')
   }
 
@@ -264,6 +288,7 @@ export function GoalsPage() {
                   }))
                 }
               />
+              <small>عدد هدف باید بزرگ‌تر از صفر باشد.</small>
             </label>
 
             <label className="goal-field">
@@ -281,6 +306,7 @@ export function GoalsPage() {
                   }))
                 }
               />
+              <small>مبلغ فعلی نمی‌تواند از مبلغ هدف بیشتر باشد.</small>
             </label>
 
             <label className="goal-field">
@@ -312,7 +338,9 @@ export function GoalsPage() {
               />
             </label>
 
-            <button type="submit">افزودن هدف</button>
+            <button type="submit" disabled={isGoalSubmitDisabled}>
+              افزودن هدف
+            </button>
           </form>
         </article>
 
@@ -381,15 +409,26 @@ export function GoalsPage() {
                   }))
                 }
               />
+              <small>
+                باقی‌مانده هدف:{' '}
+                {contributionRemainingAmount !== undefined
+                  ? formatMoney({
+                      amount: contributionRemainingAmount,
+                      currency: 'IRR',
+                    })
+                  : 'هدف را انتخاب کن'}
+              </small>
             </label>
 
-            <button type="submit">ثبت واریزی</button>
+            <button type="submit" disabled={isContributionSubmitDisabled}>
+              ثبت واریزی
+            </button>
           </form>
         </article>
       </section>
 
       {statusMessage ? (
-        <div className="goal-status" role="status">
+        <div className={`goal-status goal-status-${statusTone}`} role="status">
           <CalendarDays aria-hidden="true" size={18} />
           {statusMessage}
         </div>

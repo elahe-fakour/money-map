@@ -37,6 +37,7 @@ export function BudgetsPage() {
   )
   const [editingBudgetId, setEditingBudgetId] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState('')
+  const [statusTone, setStatusTone] = useState<'error' | 'success'>('success')
   const [budgetForm, setBudgetForm] = useState<BudgetFormState>({
     categoryId: expenseCategories[0]?.id ?? '',
     limit: '',
@@ -82,6 +83,19 @@ export function BudgetsPage() {
   const overBudgetCount = enrichedBudgets.filter(
     (budget) => budget.status === 'over-budget',
   ).length
+  const budgetLimit = Number(budgetForm.limit)
+  const hasDuplicateBudget = budgets.some(
+    (budget) =>
+      budget.categoryId === budgetForm.categoryId &&
+      budget.month === budgetForm.month &&
+      budget.id !== editingBudgetId,
+  )
+  const isBudgetSubmitDisabled =
+    !budgetForm.categoryId ||
+    !budgetForm.month ||
+    !Number.isFinite(budgetLimit) ||
+    budgetLimit <= 0 ||
+    hasDuplicateBudget
 
   const resetForm = () => {
     setEditingBudgetId(null)
@@ -98,6 +112,7 @@ export function BudgetsPage() {
     const limit = Number(budgetForm.limit)
 
     if (!Number.isFinite(limit) || limit <= 0) {
+      setStatusTone('error')
       setStatusMessage('مبلغ بودجه باید بزرگ‌تر از صفر باشد.')
       return
     }
@@ -110,6 +125,7 @@ export function BudgetsPage() {
     )
 
     if (duplicateBudget) {
+      setStatusTone('error')
       setStatusMessage('برای این دسته‌بندی و ماه قبلاً بودجه ساخته شده است.')
       return
     }
@@ -132,9 +148,11 @@ export function BudgetsPage() {
 
     if (editingBudgetId) {
       updateBudget(nextBudget)
+      setStatusTone('success')
       setStatusMessage('بودجه با موفقیت ویرایش شد.')
     } else {
       addBudget(nextBudget)
+      setStatusTone('success')
       setStatusMessage('بودجه جدید اضافه شد.')
     }
 
@@ -144,6 +162,7 @@ export function BudgetsPage() {
   const startEditingBudget = (budget: Budget) => {
     setEditingBudgetId(budget.id)
     setStatusMessage('')
+    setStatusTone('success')
     setBudgetForm({
       categoryId: budget.categoryId,
       limit: String(budget.limit.amount),
@@ -252,6 +271,11 @@ export function BudgetsPage() {
                   }))
                 }
               />
+              <small>
+                {hasDuplicateBudget
+                  ? 'برای این دسته‌بندی و ماه بودجه وجود دارد.'
+                  : 'سقف بودجه را بر اساس توان خرج ماهانه وارد کن.'}
+              </small>
             </label>
 
             <div className="budget-form-actions">
@@ -260,14 +284,14 @@ export function BudgetsPage() {
                   انصراف
                 </button>
               ) : null}
-              <button type="submit">
+              <button type="submit" disabled={isBudgetSubmitDisabled}>
                 {editingBudgetId ? 'ذخیره ویرایش' : 'افزودن بودجه'}
               </button>
             </div>
           </form>
 
           {statusMessage ? (
-            <div className="budget-status" role="status">
+            <div className={`budget-status budget-status-${statusTone}`} role="status">
               {statusMessage}
             </div>
           ) : null}

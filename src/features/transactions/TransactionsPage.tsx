@@ -81,6 +81,7 @@ export function TransactionsPage() {
   )
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null)
   const [statusMessage, setStatusMessage] = useState('')
+  const [statusTone, setStatusTone] = useState<'error' | 'success'>('success')
   const {
     control,
     formState: { errors, isSubmitSuccessful },
@@ -107,6 +108,10 @@ export function TransactionsPage() {
   const selectedAccountId = useWatch({
     control,
     name: 'accountId',
+  })
+  const selectedAmount = useWatch({
+    control,
+    name: 'amount',
   })
   const accountById = useMemo(
     () => new Map(accounts.map((account) => [account.id, account])),
@@ -222,6 +227,7 @@ export function TransactionsPage() {
       selectedAccountAvailableBalance !== undefined &&
       values.amount > selectedAccountAvailableBalance
     ) {
+      setStatusTone('error')
       setStatusMessage('مبلغ تراکنش نباید از موجودی حساب بیشتر باشد.')
       return
     }
@@ -246,10 +252,12 @@ export function TransactionsPage() {
 
     if (editingTransactionId) {
       updateTransaction(transactionPayload)
+      setStatusTone('success')
       setStatusMessage('تراکنش با موفقیت ویرایش شد.')
       setEditingTransactionId(null)
     } else {
       addTransaction(transactionPayload)
+      setStatusTone('success')
       setStatusMessage('تراکنش جدید به لیست اضافه شد.')
     }
 
@@ -259,6 +267,7 @@ export function TransactionsPage() {
   const startEditingTransaction = (transaction: Transaction) => {
     setEditingTransactionId(transaction.id)
     setStatusMessage('')
+    setStatusTone('success')
     reset({
       accountId: transaction.accountId,
       amount: transaction.amount.amount,
@@ -273,6 +282,7 @@ export function TransactionsPage() {
   const cancelEditing = () => {
     setEditingTransactionId(null)
     setStatusMessage('')
+    setStatusTone('success')
     resetForm()
   }
 
@@ -282,6 +292,7 @@ export function TransactionsPage() {
     }
 
     deleteTransaction(pendingDeleteId)
+    setStatusTone('success')
     setStatusMessage('تراکنش حذف شد.')
     setPendingDeleteId(null)
 
@@ -303,6 +314,13 @@ export function TransactionsPage() {
     setTypeFilter('all')
     setSortOption('date-desc')
   }
+  const numericSelectedAmount = Number(selectedAmount)
+  const isTransactionSubmitDisabled =
+    !Number.isFinite(numericSelectedAmount) ||
+    numericSelectedAmount <= 0 ||
+    (shouldValidateAgainstAccountBalance &&
+      selectedAccountAvailableBalance !== undefined &&
+      numericSelectedAmount > selectedAccountAvailableBalance)
 
   return (
     <div className="transactions-page">
@@ -409,6 +427,7 @@ export function TransactionsPage() {
             <input
               type="number"
               inputMode="numeric"
+              aria-invalid={Boolean(errors.amount)}
               max={
                 shouldValidateAgainstAccountBalance
                   ? selectedAccountAvailableBalance
@@ -506,14 +525,14 @@ export function TransactionsPage() {
                 انصراف
               </button>
             ) : null}
-            <button type="submit">
+            <button type="submit" disabled={isTransactionSubmitDisabled}>
               {isEditing ? 'ذخیره ویرایش' : 'ثبت تراکنش'}
             </button>
           </div>
         </form>
 
-        {isSubmitSuccessful && statusMessage ? (
-          <div className="form-success" role="status">
+        {(isSubmitSuccessful || statusTone === 'error') && statusMessage ? (
+          <div className={`form-status form-status-${statusTone}`} role="status">
             {statusMessage}
           </div>
         ) : null}
