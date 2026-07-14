@@ -1,7 +1,7 @@
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
+  grid-template-columns: 272px minmax(0, 1fr);
   background: var(--color-background);
 }
 
@@ -11,10 +11,11 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-6);
+  gap: var(--space-5);
+  padding: var(--space-5);
   border-inline-start: 1px solid var(--color-border);
   background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .brand-block {
@@ -102,8 +103,9 @@
 
 .app-content {
   min-width: 0;
-  width: min(1120px, 100%);
-  padding: var(--space-6);
+  width: min(1240px, 100%);
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-7);
 }
 
 .app-header {
@@ -111,12 +113,12 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-bottom: var(--space-5);
-  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: var(--color-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .app-header h2 {
@@ -202,10 +204,124 @@
   box-shadow: var(--shadow-sm);
 }
 
+.page-content {
+  display: grid;
+  gap: var(--space-6);
+}
+
+:is(
+  .dashboard-page,
+  .transactions-page,
+  .budgets-page,
+  .accounts-page,
+  .reports-page,
+  .goals-page,
+  .settings-page
+) {
+  gap: var(--space-6);
+}
+
+:is(
+  .dashboard-hero,
+  .transactions-hero,
+  .budgets-hero,
+  .accounts-hero,
+  .reports-hero,
+  .goals-hero,
+  .settings-hero
+) {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+:is(
+  .dashboard-hero,
+  .transactions-hero,
+  .budgets-hero,
+  .accounts-hero,
+  .reports-hero,
+  .goals-hero,
+  .settings-hero
+) > div:first-child {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+:is(
+  .dashboard-hero,
+  .transactions-hero,
+  .budgets-hero,
+  .accounts-hero,
+  .reports-hero,
+  .goals-hero,
+  .settings-hero
+) h1 {
+  margin: 0;
+  max-width: 760px;
+}
+
+:is(
+  .dashboard-hero-badge,
+  .transactions-count,
+  .budgets-total,
+  .accounts-total,
+  .reports-period,
+  .goals-total,
+  .settings-current
+) {
+  border: 1px solid var(--color-border);
+}
+
+:is(
+  .summary-card,
+  .dashboard-panel,
+  .transactions-toolbar,
+  .transaction-form-panel,
+  .delete-confirm-panel,
+  .transactions-panel,
+  .budget-summary-card,
+  .budget-panel,
+  .budget-card,
+  .account-card,
+  .account-panel,
+  .report-summary-card,
+  .report-panel,
+  .insight-card,
+  .goal-card,
+  .goal-panel,
+  .settings-panel
+) {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-card);
+}
+
+:is(
+  .summary-card,
+  .budget-summary-card,
+  .report-summary-card,
+  .account-card,
+  .goal-card,
+  .insight-card
+) {
+  align-content: start;
+}
+
+:is(.panel-heading, .settings-panel-heading, .form-heading) {
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+:is(.intro-copy, .summary-helper, .field-helper, .account-helper, .settings-note) {
+  line-height: 1.75;
+}
+
 @media (max-width: 900px) {
   .app-shell {
     display: block;
-    padding-bottom: 84px;
+    padding-bottom: 144px;
   }
 
   .app-sidebar {
@@ -242,7 +358,7 @@
     padding: var(--space-2);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background: color-mix(in srgb, var(--color-surface) 94%, transparent);
+    background: var(--color-surface);
     box-shadow: var(--shadow-md);
   }
 
@@ -271,8 +387,22 @@
   }
 }
 
+@media (max-width: 640px) {
+  :is(
+    .dashboard-hero,
+    .transactions-hero,
+    .budgets-hero,
+    .accounts-hero,
+    .reports-hero,
+    .goals-hero,
+    .settings-hero
+  ) {
+    padding: var(--space-5);
+  }
+}
+
 @media (max-width: 480px) {
   .mobile-nav {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
