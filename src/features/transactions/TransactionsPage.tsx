@@ -158,6 +158,28 @@ export function TransactionsPage() {
         return first.amount.amount - second.amount.amount
       })
   }, [accountById, categoryById, searchQuery, sortOption, transactions, typeFilter])
+  const transactionSummary = filteredTransactions.reduce(
+    (summary, transaction) => {
+      if (transaction.type === 'income') {
+        summary.income += transaction.amount.amount
+      }
+
+      if (transaction.type === 'expense') {
+        summary.expenses += transaction.amount.amount
+      }
+
+      if (transaction.type === 'transfer') {
+        summary.transfers += 1
+      }
+
+      return summary
+    },
+    {
+      expenses: 0,
+      income: 0,
+      transfers: 0,
+    },
+  )
 
   const formCategoryOptions = categories.filter((category) => {
     if (selectedTransactionType === 'transfer') {
@@ -272,6 +294,15 @@ export function TransactionsPage() {
     (transaction) => transaction.id === pendingDeleteId,
   )
   const isEditing = editingTransactionId !== null
+  const hasActiveFilters =
+    searchQuery.trim().length > 0 || typeFilter !== 'all' || sortOption !== 'date-desc'
+  const activeFilterLabel =
+    typeFilterOptions.find((option) => option.value === typeFilter)?.label ?? 'همه'
+  const resetListControls = () => {
+    setSearchQuery('')
+    setTypeFilter('all')
+    setSortOption('date-desc')
+  }
 
   return (
     <div className="transactions-page">
@@ -286,6 +317,22 @@ export function TransactionsPage() {
         <span className="transactions-count">
           {filteredTransactions.length} از {transactions.length} تراکنش
         </span>
+      </section>
+
+      <section className="transactions-summary-grid" aria-label="خلاصه تراکنش‌های نمایش داده شده">
+        <article className="transactions-summary-card transactions-summary-income">
+          <span>درآمد نتیجه فعلی</span>
+          <strong>{formatMoney({ amount: transactionSummary.income, currency: 'IRR' })}</strong>
+        </article>
+        <article className="transactions-summary-card transactions-summary-expense">
+          <span>هزینه نتیجه فعلی</span>
+          <strong>{formatMoney({ amount: transactionSummary.expenses, currency: 'IRR' })}</strong>
+        </article>
+        <article className="transactions-summary-card">
+          <span>فیلتر فعال</span>
+          <strong>{activeFilterLabel}</strong>
+          <small>{transactionSummary.transfers} انتقال در نتیجه فعلی</small>
+        </article>
       </section>
 
       <section className="transactions-toolbar" aria-label="ابزارهای تراکنش‌ها">
@@ -498,6 +545,18 @@ export function TransactionsPage() {
       ) : null}
 
       <section className="transactions-panel" aria-label="لیست تراکنش‌ها">
+        <div className="transactions-panel-heading">
+          <div>
+            <p className="eyebrow">نتیجه تراکنش‌ها</p>
+            <h2>لیست قابل بررسی</h2>
+          </div>
+          {hasActiveFilters ? (
+            <button type="button" onClick={resetListControls}>
+              پاک کردن فیلترها
+            </button>
+          ) : null}
+        </div>
+
         {filteredTransactions.length === 0 ? (
           <div className="transactions-empty">
             <h2>تراکنشی پیدا نشد</h2>
@@ -517,9 +576,13 @@ export function TransactionsPage() {
               const category = categoryById.get(transaction.categoryId)
               const account = accountById.get(transaction.accountId)
               const isExpense = transaction.type === 'expense'
+              const isTransfer = transaction.type === 'transfer'
 
               return (
-                <article className="transaction-card" key={transaction.id}>
+                <article
+                  className={`transaction-card transaction-card-${transaction.type}`}
+                  key={transaction.id}
+                >
                   <div className="transaction-name">
                     <span
                       className="transaction-category-dot"
@@ -540,12 +603,14 @@ export function TransactionsPage() {
                   </span>
                   <strong
                     className={
-                      isExpense
+                      isTransfer
+                        ? 'transaction-list-amount transfer'
+                        : isExpense
                         ? 'transaction-list-amount expense'
                         : 'transaction-list-amount'
                     }
                   >
-                    {isExpense ? '-' : '+'}
+                    {isTransfer ? '' : isExpense ? '-' : '+'}
                     {formatMoney(transaction.amount)}
                   </strong>
                   <div className="transaction-actions">
