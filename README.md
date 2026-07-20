@@ -8,7 +8,10 @@ The app is designed as a portfolio-ready frontend project with Persian RTL as
 the primary experience, English/LTR support in the app shell, persisted browser
 state, validation-heavy forms, charts, and tests.
 
-> Live demo: coming soon
+## Links
+
+- Live demo: [elahe-fakour.github.io/money-map](https://elahe-fakour.github.io/money-map/)
+- Source code: [github.com/elahe-fakour/money-map](https://github.com/elahe-fakour/money-map)
 
 ## Highlights
 
@@ -73,6 +76,13 @@ MoneyMap is intentionally built beyond a static UI. It demonstrates:
 - Responsive dashboard and data-heavy page layouts
 - Safe import/export of browser-stored data
 - Test coverage for important calculation and provider behavior
+
+## Recent UI/UX Polish
+
+- Clearer Persian microcopy for financial actions, empty states, and validation
+- Confirmation before replacing locally stored finance data
+- Keyboard skip link, visible focus states, and reduced-motion support
+- Responsive sidebar and mobile navigation with RTL-aware spacing
 
 ## App Sections
 
@@ -204,6 +214,4 @@ MIT
 
 ## Status
 
-MoneyMap is ready for GitHub as a portfolio project. The remaining showcase
-step is deploying a live demo and replacing the placeholder above with the
-production URL.
+MoneyMap is live on GitHub Pages and ready to showcase as a portfolio project.
