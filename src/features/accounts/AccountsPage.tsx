@@ -88,7 +88,7 @@ export function AccountsPage() {
     })
     setAccountForm(initialAccountForm)
     setStatusTone('success')
-    setStatusMessage('حساب جدید اضافه شد.')
+    setStatusMessage('حساب جدید ساخته شد و آماده ثبت تراکنش است.')
   }
 
   const submitTransfer = (event: React.FormEvent<HTMLFormElement>) => {
@@ -126,7 +126,7 @@ export function AccountsPage() {
       note: '',
     }))
     setStatusTone('success')
-    setStatusMessage('انتقال بین حساب‌ها ثبت شد.')
+    setStatusMessage('انتقال ثبت شد و موجودی هر دو حساب به‌روز است.')
   }
 
   return (

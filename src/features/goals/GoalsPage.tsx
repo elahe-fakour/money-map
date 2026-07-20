@@ -138,7 +138,7 @@ export function GoalsPage() {
       goalId: current.goalId || goal.id,
     }))
     setStatusTone('success')
-    setStatusMessage('هدف پس‌انداز جدید اضافه شد.')
+    setStatusMessage('هدف پس‌انداز ساخته شد؛ حالا می‌توانی برایش واریزی ثبت کنی.')
   }
 
   const submitContribution = (event: FormEvent<HTMLFormElement>) => {
@@ -178,7 +178,7 @@ export function GoalsPage() {
       amount: '',
     }))
     setStatusTone('success')
-    setStatusMessage('واریزی هدف پس‌انداز ثبت شد.')
+    setStatusMessage('واریزی ثبت شد و از موجودی حساب انتخاب‌شده کم شد.')
   }
 
   return (

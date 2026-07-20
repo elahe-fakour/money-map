@@ -253,12 +253,12 @@ export function TransactionsPage() {
     if (editingTransactionId) {
       updateTransaction(transactionPayload)
       setStatusTone('success')
-      setStatusMessage('تراکنش با موفقیت ویرایش شد.')
+      setStatusMessage('تراکنش ویرایش شد و موجودی حساب‌ها به‌روز است.')
       setEditingTransactionId(null)
     } else {
       addTransaction(transactionPayload)
       setStatusTone('success')
-      setStatusMessage('تراکنش جدید به لیست اضافه شد.')
+      setStatusMessage('تراکنش ثبت شد و در موجودی حساب‌ها اعمال شد.')
     }
 
     resetForm({ accountId: values.accountId, date: values.date, type: values.type })
@@ -293,7 +293,7 @@ export function TransactionsPage() {
 
     deleteTransaction(pendingDeleteId)
     setStatusTone('success')
-    setStatusMessage('تراکنش حذف شد.')
+    setStatusMessage('تراکنش حذف شد و موجودی حساب‌ها به‌روز شد.')
     setPendingDeleteId(null)
 
     if (editingTransactionId === pendingDeleteId) {
@@ -329,7 +329,7 @@ export function TransactionsPage() {
           <p className="eyebrow">پیگیری جریان پول</p>
           <h1 id="transactions-title">تراکنش‌ها</h1>
           <p className="intro-copy">
-            درآمد، هزینه و انتقال‌های نمونه را جست‌وجو، فیلتر و مرتب کن.
+            درآمدها، هزینه‌ها و انتقال‌ها را جست‌وجو، فیلتر و مرتب کن.
           </p>
         </div>
         <span className="transactions-count">
@@ -408,8 +408,8 @@ export function TransactionsPage() {
             </h2>
           </div>
           <p>
-            تغییرات تراکنش‌ها در داده‌های برنامه ذخیره می‌شود و بعد از refresh هم
-            باقی می‌ماند.
+            تغییرات در همین مرورگر ذخیره می‌شوند و پس از نوسازی صفحه هم باقی
+            می‌مانند.
           </p>
         </div>
 
@@ -545,8 +545,8 @@ export function TransactionsPage() {
             <p className="eyebrow">تأیید حذف</p>
             <h2 id="delete-title">این تراکنش حذف شود؟</h2>
             <p>
-              {pendingDeleteTransaction.note ?? 'تراکنش انتخاب‌شده'} برای همیشه
-              از لیست فعلی حذف می‌شود.
+              {pendingDeleteTransaction.note ?? 'تراکنش انتخاب‌شده'} و اثر آن بر
+              موجودی حساب برای همیشه حذف می‌شود. این عمل قابل بازگردانی نیست.
             </p>
           </div>
           <div className="delete-actions">
@@ -579,8 +579,12 @@ export function TransactionsPage() {
 
         {filteredTransactions.length === 0 ? (
           <div className="transactions-empty">
-            <h2>تراکنشی پیدا نشد</h2>
-            <p>عبارت جست‌وجو یا فیلترها را تغییر بده.</p>
+            <h2>{hasActiveFilters ? 'تراکنشی با این فیلترها پیدا نشد' : 'هنوز تراکنشی ثبت نشده است'}</h2>
+            <p>
+              {hasActiveFilters
+                ? 'جست‌وجو یا فیلترها را تغییر بده تا نتیجه‌های بیشتری ببینی.'
+                : 'از فرم بالا اولین درآمد، هزینه یا انتقالت را ثبت کن.'}
+            </p>
           </div>
         ) : (
           <div className="transactions-list">

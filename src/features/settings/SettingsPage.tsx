@@ -38,6 +38,7 @@ const currencyOptions: CurrencyCode[] = ['IRR', 'USD', 'EUR', 'GBP']
 export function SettingsPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [backupStatus, setBackupStatus] = useState('')
+  const [isResetConfirmationVisible, setIsResetConfirmationVisible] = useState(false)
   const {
     accounts,
     budgets,
@@ -95,6 +96,12 @@ export function SettingsPage() {
     } finally {
       event.target.value = ''
     }
+  }
+
+  const confirmResetFinanceData = () => {
+    resetFinanceData()
+    setIsResetConfirmationVisible(false)
+    setBackupStatus('داده‌های نمونه جایگزین شدند.')
   }
 
   return (
@@ -196,7 +203,7 @@ export function SettingsPage() {
             <Moon aria-hidden="true" size={22} />
             <div>
               <h2>حالت ظاهری</h2>
-              <p>فعلاً tokenهای روشن/تیره آماده‌اند و این state پایه UI است.</p>
+              <p>حالت روشن، تیره یا هماهنگ با تنظیمات دستگاه را انتخاب کن.</p>
             </div>
           </div>
 
@@ -229,12 +236,12 @@ export function SettingsPage() {
             <Settings2 aria-hidden="true" size={22} />
             <div>
               <h2>داده‌ها</h2>
-              <p>ورود و خروج CSV برای نسخه‌های بعدی آماده برنامه‌ریزی است.</p>
+              <p>از اطلاعاتت نسخه پشتیبان بگیر یا داده‌های نمونه را برگردان.</p>
             </div>
           </div>
           <p className="settings-note">
-            داده‌ها در مرورگر ذخیره می‌شوند و بعد از refresh هم باقی می‌مانند.
-            برای جابه‌جایی بین مرورگرها می‌توانی فایل پشتیبان JSON بگیری.
+            داده‌ها فقط در همین مرورگر ذخیره می‌شوند. برای انتقال یا نگه‌داری امن،
+            یک فایل پشتیبان JSON بگیر.
           </p>
           <div className="settings-actions">
             <button
@@ -270,10 +277,42 @@ export function SettingsPage() {
           <button
             className="settings-reset-button"
             type="button"
-            onClick={resetFinanceData}
+            onClick={() => setIsResetConfirmationVisible(true)}
           >
-            بازنشانی داده‌های نمونه
+            بازگرداندن داده‌های نمونه
           </button>
+          {isResetConfirmationVisible ? (
+            <div
+              className="settings-reset-confirmation"
+              role="alertdialog"
+              aria-labelledby="reset-confirmation-title"
+              aria-describedby="reset-confirmation-description"
+            >
+              <div>
+                <strong id="reset-confirmation-title">داده‌های فعلی جایگزین شوند؟</strong>
+                <p id="reset-confirmation-description">
+                  همه تراکنش‌ها، حساب‌ها، بودجه‌ها و هدف‌های فعلی حذف می‌شوند. پیش
+                  از ادامه، از داده‌ها خروجی JSON بگیر.
+                </p>
+              </div>
+              <div className="settings-reset-actions">
+                <button
+                  className="secondary-button"
+                  type="button"
+                  onClick={() => setIsResetConfirmationVisible(false)}
+                >
+                  انصراف
+                </button>
+                <button
+                  className="settings-reset-confirm-button"
+                  type="button"
+                  onClick={confirmResetFinanceData}
+                >
+                  جایگزین کردن داده‌ها
+                </button>
+              </div>
+            </div>
+          ) : null}
         </article>
       </section>
     </div>

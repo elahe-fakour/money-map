@@ -149,11 +149,11 @@ export function BudgetsPage() {
     if (editingBudgetId) {
       updateBudget(nextBudget)
       setStatusTone('success')
-      setStatusMessage('بودجه با موفقیت ویرایش شد.')
+      setStatusMessage('بودجه ویرایش شد؛ میزان خرج از تراکنش‌ها محاسبه می‌شود.')
     } else {
       addBudget(nextBudget)
       setStatusTone('success')
-      setStatusMessage('بودجه جدید اضافه شد.')
+      setStatusMessage('بودجه ساخته شد؛ میزان خرج با تراکنش‌های این ماه به‌روز می‌شود.')
     }
 
     resetForm()
