@@ -10,7 +10,7 @@ import {
   Settings,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useFinance } from './hooks/useFinance'
 import type { AppLocale } from './types'
 import './App.css'
@@ -72,41 +72,23 @@ const shellCopy: Record<
   {
     brandName: string
     brandSubtitle: string
-    eyebrow: string
-    headerTitle: string
     skipToContentLabel: string
-    localeLabel: string
     mobileNavLabel: string
-    currentPageLabel: string
-    quickSettingsLabel: string
-    settingsActionLabel: string
     sidebarLabel: string
   }
 > = {
   en: {
     brandName: 'MoneyMap',
     brandSubtitle: 'Personal finance manager',
-    eyebrow: 'Product preview',
-    headerTitle: 'Everyday financial planning',
     skipToContentLabel: 'Skip to main content',
-    localeLabel: 'English',
     mobileNavLabel: 'Mobile navigation',
-    currentPageLabel: 'Current page',
-    quickSettingsLabel: 'Quick settings',
-    settingsActionLabel: 'Open settings',
     sidebarLabel: 'Main navigation',
   },
   fa: {
     brandName: 'مانی‌مپ',
     brandSubtitle: 'مدیریت مالی شخصی',
-    eyebrow: 'نسخه آزمایشی محصول',
-    headerTitle: 'برنامه‌ریزی مالی روزمره',
     skipToContentLabel: 'پرش به محتوای اصلی',
-    localeLabel: 'فارسی',
     mobileNavLabel: 'ناوبری موبایل',
-    currentPageLabel: 'صفحه فعلی',
-    quickSettingsLabel: 'تنظیمات سریع',
-    settingsActionLabel: 'رفتن به تنظیمات',
     sidebarLabel: 'ناوبری اصلی',
   },
 }
@@ -118,12 +100,6 @@ function App() {
   const previousPathnameRef = useRef(location.pathname)
   const items = navigationItems[settings.locale]
   const copy = shellCopy[settings.locale]
-  const currentItem =
-    items
-      .filter((item) =>
-        item.end ? location.pathname === item.to : location.pathname.startsWith(item.to),
-      )
-      .sort((first, second) => second.to.length - first.to.length)[0] ?? items[0]
 
   useEffect(() => {
     const root = document.documentElement
@@ -180,28 +156,6 @@ function App() {
       </aside>
 
       <div className="app-content">
-        <header className="app-header">
-          <div>
-            <p className="eyebrow">{copy.eyebrow}</p>
-            <h2>{copy.headerTitle}</h2>
-            <p className="current-page-pill" aria-live="polite">
-              {copy.currentPageLabel}: {currentItem.label}
-            </p>
-          </div>
-          <Link
-            className="header-actions"
-            to="/settings"
-            aria-label={copy.quickSettingsLabel}
-          >
-            <span className="locale-chip">{copy.localeLabel}</span>
-            <span className="currency-chip">{settings.currency}</span>
-            <span className="settings-link-label">
-              <Settings aria-hidden="true" size={17} />
-              {copy.settingsActionLabel}
-            </span>
-          </Link>
-        </header>
-
         <main
           className="page-content"
           id="main-content"
