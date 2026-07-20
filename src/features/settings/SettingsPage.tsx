@@ -254,6 +254,7 @@ export function SettingsPage() {
               وارد کردن پشتیبان
             </button>
             <input
+              aria-label="انتخاب فایل پشتیبان JSON"
               accept="application/json,.json"
               className="settings-file-input"
               ref={fileInputRef}
@@ -262,7 +263,7 @@ export function SettingsPage() {
             />
           </div>
           {backupStatus ? (
-            <p className="settings-backup-status" role="status">
+            <p className="settings-backup-status" role="status" aria-live="polite">
               {backupStatus}
             </p>
           ) : null}

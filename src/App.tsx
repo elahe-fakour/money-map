@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   BarChart3,
   CreditCard,
@@ -114,6 +114,8 @@ const shellCopy: Record<
 function App() {
   const { settings } = useFinance()
   const location = useLocation()
+  const mainContentRef = useRef<HTMLElement>(null)
+  const previousPathnameRef = useRef(location.pathname)
   const items = navigationItems[settings.locale]
   const copy = shellCopy[settings.locale]
   const currentItem =
@@ -130,6 +132,16 @@ function App() {
     root.dir = settings.direction
     root.dataset.theme = settings.themeMode
   }, [settings.direction, settings.locale, settings.themeMode])
+
+  useEffect(() => {
+    if (previousPathnameRef.current === location.pathname) {
+      return
+    }
+
+    previousPathnameRef.current = location.pathname
+    mainContentRef.current?.focus({ preventScroll: true })
+    window.scrollTo({ behavior: 'auto', left: 0, top: 0 })
+  }, [location.pathname])
 
   return (
     <div className="app-shell">
@@ -172,7 +184,7 @@ function App() {
           <div>
             <p className="eyebrow">{copy.eyebrow}</p>
             <h2>{copy.headerTitle}</h2>
-            <p className="current-page-pill">
+            <p className="current-page-pill" aria-live="polite">
               {copy.currentPageLabel}: {currentItem.label}
             </p>
           </div>
@@ -190,7 +202,12 @@ function App() {
           </Link>
         </header>
 
-        <main className="page-content" id="main-content" tabIndex={-1}>
+        <main
+          className="page-content"
+          id="main-content"
+          ref={mainContentRef}
+          tabIndex={-1}
+        >
           <Outlet />
         </main>
       </div>
@@ -204,6 +221,7 @@ function App() {
             end={item.end}
             key={item.to}
             to={item.to}
+            aria-label={item.label}
             title={item.label}
           >
             <span className="mobile-nav-symbol" aria-hidden="true">
