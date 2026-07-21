@@ -136,20 +136,20 @@ npm test
 npm run build
 ```
 
-For Playwright, install the browser once:
-
-```bash
-npx playwright install chromium
-```
-
-Then run:
+End-to-end tests use the Chrome browser installed on your system:
 
 ```bash
 npm run test:e2e
 ```
 
-If browser download is blocked by network/location restrictions, install the
-browser from a network that can access the Playwright CDN.
+If Chrome is not installed, install it first or configure Playwright with its
+bundled Chromium browser.
+
+To use Playwright's bundled Chromium instead:
+
+```bash
+npx playwright install chromium
+```
 
 ## Project Structure
 
