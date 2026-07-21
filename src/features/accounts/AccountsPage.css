@@ -15,17 +15,31 @@
 
 .accounts-hero {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-5);
-  padding: var(--space-6);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+}
+
+.accounts-hero > div:first-child {
+  min-width: 0;
+}
+
+.accounts-hero h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.accounts-hero .intro-copy {
+  margin-top: var(--space-1);
+  font-size: 0.9375rem;
 }
 
 .accounts-total {
   display: grid;
-  gap: var(--space-2);
-  min-width: 220px;
-  padding: var(--space-4);
+  gap: var(--space-1);
+  min-width: 180px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   background: var(--color-surface-muted);
 }
@@ -38,7 +52,7 @@
 
 .accounts-total strong {
   color: var(--color-primary-strong);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
 }
 
 .account-grid {
@@ -183,8 +197,8 @@
 
 @media (max-width: 640px) {
   .accounts-hero {
-    flex-direction: column;
-    padding: var(--space-5);
+    align-items: stretch;
+    padding: var(--space-4);
   }
 
   .accounts-total {

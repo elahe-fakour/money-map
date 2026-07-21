@@ -15,17 +15,31 @@
 
 .goals-hero {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-5);
-  padding: var(--space-6);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+}
+
+.goals-hero > div:first-child {
+  min-width: 0;
+}
+
+.goals-hero h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.goals-hero .intro-copy {
+  margin-top: var(--space-1);
+  font-size: 0.9375rem;
 }
 
 .goals-total {
   display: grid;
-  gap: var(--space-2);
-  min-width: 240px;
-  padding: var(--space-4);
+  gap: var(--space-1);
+  min-width: 180px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   background: var(--color-surface-muted);
 }
@@ -40,7 +54,7 @@
 
 .goals-total strong {
   color: var(--color-primary-strong);
-  font-size: 1.75rem;
+  font-size: 1.25rem;
 }
 
 .goal-grid {
@@ -212,7 +226,7 @@
   }
 
   .goals-hero {
-    padding: var(--space-5);
+    padding: var(--space-4);
   }
 
   .goals-total {

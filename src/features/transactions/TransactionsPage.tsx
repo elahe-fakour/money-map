@@ -325,16 +325,20 @@ export function TransactionsPage() {
   return (
     <div className="transactions-page">
       <section className="transactions-hero" aria-labelledby="transactions-title">
-        <div>
-          <p className="eyebrow">پیگیری جریان پول</p>
+        <div className="transactions-hero-content">
           <h1 id="transactions-title">تراکنش‌ها</h1>
           <p className="intro-copy">
-            درآمدها، هزینه‌ها و انتقال‌ها را جست‌وجو، فیلتر و مرتب کن.
+            درآمدها، هزینه‌ها و انتقال‌ها را ثبت، جست‌وجو و بررسی کن.
           </p>
         </div>
-        <span className="transactions-count">
-          {filteredTransactions.length} از {transactions.length} تراکنش
-        </span>
+        <div className="transactions-count" aria-live="polite">
+          <strong>{filteredTransactions.length}</strong>
+          <span>
+            {hasActiveFilters
+              ? `نتیجه از ${transactions.length} تراکنش`
+              : 'تراکنش ثبت‌شده'}
+          </span>
+        </div>
       </section>
 
       <section className="transactions-summary-grid" aria-label="خلاصه تراکنش‌های نمایش داده شده">

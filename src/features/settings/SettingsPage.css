@@ -13,17 +13,31 @@
 
 .settings-hero {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: var(--space-5);
-  padding: var(--space-6);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+}
+
+.settings-hero > div:first-child {
+  min-width: 0;
+}
+
+.settings-hero h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.settings-hero .intro-copy {
+  margin-top: var(--space-1);
+  font-size: 0.9375rem;
 }
 
 .settings-current {
   display: grid;
-  gap: var(--space-2);
-  min-width: 220px;
-  padding: var(--space-4);
+  gap: var(--space-1);
+  min-width: 180px;
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
   background: var(--color-surface-muted);
 }
@@ -38,7 +52,7 @@
 
 .settings-current strong {
   color: var(--color-primary-strong);
-  font-size: 1.25rem;
+  font-size: 1.125rem;
 }
 
 .settings-grid {
@@ -209,9 +223,9 @@
 
 @media (max-width: 640px) {
   .settings-hero {
-    align-items: flex-start;
+    align-items: stretch;
     flex-direction: column;
-    padding: var(--space-5);
+    padding: var(--space-4);
   }
 
   .settings-current {
